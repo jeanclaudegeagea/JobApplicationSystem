@@ -1,0 +1,35 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# Dependency directories
+/.pnp
+.pnp.js
+
+# IDE/Editor files
+.vscode/
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# build output (if any)
+dist/
+build/
+
+# package-lock.json (if you prefer to ignore it, though it's generally recommended to keep it)
+package-lock.json
+
+# Miscellaneous files
+*.tgz
+*.swp
