@@ -5,9 +5,13 @@ class UserController {
     try {
       const userData = req.body;
       const newUser = await UserService.createUser(userData);
-      res.status(201).json({ message: "User registered successfully" });
+      res.status(201).json({
+        message: "User registered successfully",
+      });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({
+        error: error.message,
+      });
     }
   }
 
@@ -15,18 +19,27 @@ class UserController {
     try {
       const { email, password } = req.body;
       const token = await UserService.login(email, password);
-      res.status(200).json({ message: "Login successfull", token });
+      res.status(200).json({
+        message: "Login successfull",
+        token,
+      });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({
+        error: error.message,
+      });
     }
   }
 
   async getProfile(req, res) {
     try {
       const user = await UserService.getUserById(req.userId);
-      res.status(200).json({ user });
+      res.status(200).json({
+        user,
+      });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({
+        error: error.message,
+      });
     }
   }
 
@@ -40,16 +53,22 @@ class UserController {
         .status(200)
         .json({ message: "Profile updated successfully", updatedUser });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({
+        error: error.message,
+      });
     }
   }
 
   async deleteProfile(req, res) {
     try {
       await UserService.deleteUserById(req.userId);
-      res.status(200).json({ message: "User deleted successfully" });
+      res.status(200).json({
+        message: "User deleted successfully",
+      });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({
+        error: error.message,
+      });
     }
   }
 }
