@@ -19,7 +19,10 @@ class UserService {
 
     // Generate JWT token
     const token = AuthService.generateToken(user._id);
-    return token;
+    return {
+      user,
+      token,
+    };
   }
 
   async getUserById(id) {
