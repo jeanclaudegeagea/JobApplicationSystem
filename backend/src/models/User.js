@@ -29,4 +29,11 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+userSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.password = undefined;
+    return ret;
+  },
+});
+
 module.exports = mongoose.model("User", userSchema);
