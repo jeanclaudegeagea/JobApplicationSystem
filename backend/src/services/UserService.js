@@ -22,6 +22,7 @@ class UserService {
     return {
       user,
       token,
+      type: "User",
     };
   }
 

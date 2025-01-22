@@ -3,11 +3,21 @@ const mongoose = require("mongoose");
 const connectionSchema = new mongoose.Schema({
   follower: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: ["User", "Company"], // Array of possible references
+    refPath: "followerType",
+  },
+  followerType: {
+    type: String,
+    enum: ["User", "Company"],
+    required: true,
   },
   following: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: ["User", "Company"], // Array of possible references
+    refPath: "followingType",
+  },
+  followingType: {
+    type: String,
+    enum: ["User", "Company"],
+    required: true,
   },
 });
 
