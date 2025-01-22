@@ -6,17 +6,17 @@ const notificationSchema = new mongoose.Schema({
     default: Date.now,
     required: true,
   },
-  fromUser: {
+  userNotified: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-  },
-  fromCompany: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Company",
   },
   message: {
     type: String,
     required: true,
+  },
+  isRead: {
+    type: Boolean,
+    default: false,
   },
 });
 
