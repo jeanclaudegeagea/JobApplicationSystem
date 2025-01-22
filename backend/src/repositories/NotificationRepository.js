@@ -1,7 +1,7 @@
 const Notification = require("../models/Notification");
 
 class NotificationRepository {
-  async sendNotification(message, following) {
+  async sendFollowNotification(message, following) {
     const newNotification = new Notification({
       message,
       userNotified: following,

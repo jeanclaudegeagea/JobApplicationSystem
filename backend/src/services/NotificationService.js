@@ -1,10 +1,10 @@
 const NotificationRepository = require("../repositories/NotificationRepository");
 
 class NotificationService {
-  async sendNotification(notificationData) {
+  async sendFollowNotification(notificationData) {
     const { message, following } = notificationData;
 
-    await NotificationRepository.sendNotification(message, following);
+    await NotificationRepository.sendFollowNotification(message, following);
   }
 
   async getUsersNotifications(userId) {

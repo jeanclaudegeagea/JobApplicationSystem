@@ -1,6 +1,8 @@
 const express = require("express");
 const ConnectionController = require("../controllers/ConnectionController");
-const { sendNotification } = require("../controllers/NotificationController");
+const {
+  sendFollowNotification,
+} = require("../controllers/NotificationController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -9,7 +11,7 @@ router.post(
   "/follow",
   authMiddleware,
   ConnectionController.follow,
-  sendNotification
+  sendFollowNotification
 );
 router.post("/unfollow", authMiddleware, ConnectionController.unfollow);
 
