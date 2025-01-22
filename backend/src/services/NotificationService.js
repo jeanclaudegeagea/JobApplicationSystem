@@ -6,6 +6,14 @@ class NotificationService {
 
     await NotificationRepository.sendNotification(message, following);
   }
+
+  async getUsersNotifications(userId) {
+    return await NotificationRepository.getUsersNotifications(userId);
+  }
+
+  async readNotification(notificationId) {
+    await NotificationRepository.readNotification(notificationId);
+  }
 }
 
 module.exports = new NotificationService();

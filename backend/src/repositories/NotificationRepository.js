@@ -9,6 +9,18 @@ class NotificationRepository {
 
     await newNotification.save();
   }
+
+  async getUsersNotifications(userId) {
+    return await Notification.find({
+      userNotified: userId,
+    });
+  }
+
+  async readNotification(notificationId) {
+    await Notification.findByIdAndUpdate(notificationId, {
+      isRead: true,
+    });
+  }
 }
 
 module.exports = new NotificationRepository();
