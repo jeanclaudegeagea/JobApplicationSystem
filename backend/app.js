@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const connectDatabase = require("./src/config/database");
 const userRoutes = require("./src/routes/userRoutes");
+const connectionRoutes = require("./src/routes/connectionRoutes");
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 connectDatabase();
 
 app.use("/api/users/", userRoutes);
+app.use("/api/connections/", connectionRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });
