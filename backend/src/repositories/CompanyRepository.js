@@ -10,6 +10,10 @@ class CompanyRepository {
     return await Company.findById(id);
   }
 
+  async findByEmail(email) {
+    return await Company.findOne({ email });
+  }
+
   async findAll(filter = {}) {
     return await Company.find(filter);
   }

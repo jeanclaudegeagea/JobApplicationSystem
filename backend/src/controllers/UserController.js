@@ -1,3 +1,4 @@
+const upload = require("../config/multerConfig");
 const UserService = require("../services/UserService");
 
 class UserController {
@@ -42,13 +43,42 @@ class UserController {
 
   async updateProfile(req, res) {
     try {
-      const updatedUser = await UserService.updateUserById(
-        req.userId,
-        req.body
-      );
-      res
-        .status(200)
-        .json({ message: "Profile updated successfully", updatedUser });
+      upload.fields([
+        { name: "profilePicture", maxCount: 1 },
+        { name: "cv", maxCount: 1 },
+      ])(req, res, async (err) => {
+        if (err) {
+          return res.status(400).json({ error: err.message });
+        }
+
+        // Get the updated data from the request body
+        const updateData = req.body;
+
+        // If files are uploaded, add file paths (URLs) to the update data
+        if (req.files.profilePicture) {
+          updateData.profilePicture = `/uploads/${req.files.profilePicture[0].filename}`;
+        }
+        if (req.files.cv) {
+          updateData.cv = `/uploads/${req.files.cv[0].filename}`;
+        }
+
+        if (req.body.experience) {
+          updateData.experience = JSON.parse(req.body.experience); // Convert JSON string to array of objects
+        }
+        if (req.body.university) {
+          updateData.university = JSON.parse(req.body.university); // Convert JSON string to array of objects
+        }
+
+        // Update the user's profile with new data
+        const updatedUser = await UserService.updateUserById(
+          req.userId,
+          updateData
+        );
+        res.status(200).json({
+          message: "Profile updated successfully",
+          updatedUser,
+        });
+      });
     } catch (error) {
       res.status(400).json({
         error: error.message,
