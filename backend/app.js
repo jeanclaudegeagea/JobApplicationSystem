@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const connectDatabase = require("./src/config/database");
@@ -21,5 +22,7 @@ app.use("/api/connections/", connectionRoutes);
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });
 });
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 module.exports = app;
