@@ -1,6 +1,6 @@
 const UserRepository = require("../repositories/UserRepository");
 const bcrypt = require("bcrypt");
-const AuthService = require("./AuthService");
+const UserAuthService = require("./UserAuthService");
 
 class UserService {
   async createUser(userData) {
@@ -18,7 +18,7 @@ class UserService {
     if (!isMatch) throw new Error("Invalid credentials");
 
     // Generate JWT token
-    const token = AuthService.generateToken(user._id);
+    const token = UserAuthService.generateToken(user._id);
     return {
       user,
       token,

@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const CompanyRepository = require("../repositories/CompanyRepository");
-const AuthService = require("./AuthService");
+const CompanyAuthService = require("./CompanyAuthService");
 
 class CompanyService {
   async createCompany(companyData) {
@@ -17,7 +17,7 @@ class CompanyService {
     const isMatch = await bcrypt.compare(password, company.password);
     if (!isMatch) throw new Error("Invalid credentials");
 
-    const token = AuthService.generateToken(company._id);
+    const token = CompanyAuthService.generateToken(company._id);
     return { company, token, type: "Company" };
   }
 

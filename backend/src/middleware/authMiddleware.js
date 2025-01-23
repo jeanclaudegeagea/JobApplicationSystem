@@ -1,4 +1,4 @@
-const AuthService = require("../services/AuthService");
+const UserAuthService = require("../services/UserAuthService");
 
 module.exports = function (req, res, next) {
   const token = req.header("Authorization")?.split(" ")[1];
@@ -10,7 +10,14 @@ module.exports = function (req, res, next) {
   }
 
   try {
-    const decoded = AuthService.verifyToken(token);
+    const decoded = UserAuthService.verifyToken(token);
+
+    if (!decoded.userId) {
+      return res
+        .status(403)
+        .json({ message: "Access denied, incorrect role (user expected)" });
+    }
+
     req.userId = decoded.userId;
     next();
   } catch (error) {

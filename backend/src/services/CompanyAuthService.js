@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET, JWT_EXPIRATION } = require("../config/jwtConfig");
 
-class AuthService {
-  generateToken(userId) {
-    const payload = { userId };
+class CompanyAuthService {
+  generateToken(companyId) {
+    const payload = { companyId };
     return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
   }
 
@@ -24,4 +24,4 @@ class AuthService {
   }
 }
 
-module.exports = new AuthService();
+module.exports = new CompanyAuthService();

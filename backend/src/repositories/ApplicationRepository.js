@@ -8,7 +8,7 @@ class ApplicationRepository {
 
   async findById(id) {
     return await Application.findById(id)
-      .populate("user", "name email profilePicture")
+      .populate("user", "name email profilePicture cv")
       .populate("job", "title company");
   }
 
