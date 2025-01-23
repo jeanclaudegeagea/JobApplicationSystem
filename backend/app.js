@@ -7,6 +7,7 @@ const connectDatabase = require("./src/config/database");
 const userRoutes = require("./src/routes/userRoutes");
 const companiesRoutes = require("./src/routes/companyRoutes");
 const connectionRoutes = require("./src/routes/connectionRoutes");
+const notificationsRoutes = require("./src/routes/notificationsRoute");
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ connectDatabase();
 app.use("/api/users/", userRoutes);
 app.use("/api/companies/", companiesRoutes);
 app.use("/api/connections/", connectionRoutes);
+app.use("/api/notifications", notificationsRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });

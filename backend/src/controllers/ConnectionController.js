@@ -1,7 +1,8 @@
 const ConnectionService = require("../services/ConnectionService");
+const UserRepository = require("../repositories/UserRepository");
 
 class ConnectionController {
-  async follow(req, res) {
+  async follow(req, res, next) {
     try {
       const { follower, followerType, following, followingType } = req.body;
 
@@ -12,9 +13,11 @@ class ConnectionController {
         followingType
       );
 
-      res.status(201).json({
-        message: "Success",
-      });
+      const followerData = await UserRepository.findById(follower);
+
+      req.body.message = `${followerData.name} followed you`;
+
+      next();
     } catch (error) {
       res.status(400).json({
         error: error.message,
