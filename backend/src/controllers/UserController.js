@@ -19,6 +19,13 @@ class UserController {
   async login(req, res) {
     try {
       const { email, password } = req.body;
+
+      if (!email?.trim() || !password?.trim()) {
+        return res.status(401).json({
+          error: "All fields are required",
+        });
+      }
+
       const user = await UserService.login(email, password);
       res.status(200).json(user);
     } catch (error) {

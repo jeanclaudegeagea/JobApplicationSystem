@@ -16,6 +16,13 @@ class CompanyController {
   async login(req, res) {
     try {
       const { email, password } = req.body;
+
+      if (!email?.trim() || !password?.trim()) {
+        return res.status(401).json({
+          error: "All fields are required",
+        });
+      }
+
       const company = await CompanyService.login(email, password);
       res.status(200).json(company);
     } catch (error) {

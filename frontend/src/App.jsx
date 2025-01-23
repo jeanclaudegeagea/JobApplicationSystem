@@ -1,9 +1,10 @@
 import { publicRoutes, privateRoutes } from "./routes";
 import SignIn from "./pages/SignIn";
 import { Routes, Route, Navigate } from "react-router";
+import { useAuth } from "./utils/AuthContext"; // Import the useAuth hook
 
 const App = () => {
-  const isAuth = false;
+  const { isAuth } = useAuth(); // Get the isAuth value from context
 
   return (
     <Routes>
