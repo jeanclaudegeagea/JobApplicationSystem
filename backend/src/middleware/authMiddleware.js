@@ -5,7 +5,7 @@ module.exports = function (req, res, next) {
 
   if (!token) {
     return res.status(403).json({
-      message: "Access denied, token missing",
+      error: "Access denied",
     });
   }
 
@@ -21,6 +21,8 @@ module.exports = function (req, res, next) {
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    return res.status(403).json({ message: "Invalid or expired token" });
+    return res.status(403).json({
+      error: "Session expired",
+    });
   }
 };
