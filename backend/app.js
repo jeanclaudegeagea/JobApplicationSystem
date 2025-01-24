@@ -9,6 +9,7 @@ const companiesRoutes = require("./src/routes/companyRoutes");
 const connectionRoutes = require("./src/routes/connectionRoutes");
 const notificationsRoutes = require("./src/routes/notificationsRoute");
 const jobRoutes = require("./src/routes/jobRoutes");
+const applicationRoutes = require("./src/routes/applicationRoutes");
 
 dotenv.config();
 
@@ -24,10 +25,7 @@ app.use("/api/companies/", companiesRoutes);
 app.use("/api/connections/", connectionRoutes);
 app.use("/api/notifications", notificationsRoutes);
 app.use("/api/jobs", jobRoutes);
-
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Server is up and running!" });
-});
+app.use("/api/applications", applicationRoutes);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

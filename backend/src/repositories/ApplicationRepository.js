@@ -7,15 +7,11 @@ class ApplicationRepository {
   }
 
   async findById(id) {
-    return await Application.findById(id)
-      .populate("user", "name email profilePicture cv")
-      .populate("job", "title company");
+    return await Application.findById(id).populate("user").populate("job");
   }
 
   async findAll(filter = {}) {
-    return await Application.find(filter)
-      .populate("user", "name email profilePicture")
-      .populate("job", "title company");
+    return await Application.find(filter).populate("user").populate("job");
   }
 
   async updateById(id, updateData) {
