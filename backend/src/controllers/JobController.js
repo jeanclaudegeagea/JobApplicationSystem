@@ -17,7 +17,7 @@ class JobController {
       const { id } = req.params;
       const job = await JobService.getJobById(id);
       if (!job) {
-        return res.status(404).json({ message: "Job not found" });
+        return res.status(404).json({ error: "Job not found" });
       }
       res.status(200).json(job);
     } catch (error) {
@@ -46,7 +46,7 @@ class JobController {
       const updateData = req.body;
       const job = await JobService.updateJobById(id, updateData);
       if (!job) {
-        return res.status(404).json({ message: "Job not found" });
+        return res.status(404).json({ error: "Job not found" });
       }
       res.status(200).json(job);
     } catch (error) {
@@ -59,7 +59,7 @@ class JobController {
       const { id } = req.params;
       const job = await JobService.deleteJobById(id);
       if (!job) {
-        return res.status(404).json({ message: "Job not found" });
+        return res.status(404).json({ error: "Job not found" });
       }
       res.status(200).json({ message: "Job deleted successfully" });
     } catch (error) {

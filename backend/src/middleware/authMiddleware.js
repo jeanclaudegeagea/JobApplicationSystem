@@ -15,7 +15,7 @@ module.exports = function (req, res, next) {
     if (!decoded.userId) {
       return res
         .status(403)
-        .json({ message: "Access denied, incorrect role (user expected)" });
+        .json({ error: "Access denied, incorrect role (user expected)" });
     }
 
     req.userId = decoded.userId;

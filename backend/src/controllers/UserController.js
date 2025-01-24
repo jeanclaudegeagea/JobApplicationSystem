@@ -4,7 +4,19 @@ const UserService = require("../services/UserService");
 class UserController {
   async register(req, res) {
     try {
+      const requiredFields = ["name", "email", "phoneNumber", "password"];
+
       const userData = req.body;
+
+      const missingFields = requiredFields.filter(
+        (field) => !userData[field]?.trim()
+      );
+
+      if (missingFields.length > 0) {
+        return res.status(400).json({
+          error: `Missing required fields: ${missingFields.join(", ")}`,
+        });
+      }
       const newUser = await UserService.createUser(userData);
       res.status(201).json({
         message: "User registered successfully",
