@@ -4,6 +4,14 @@ const CompanyAuthService = require("./CompanyAuthService");
 
 class CompanyService {
   async createCompany(companyData) {
+    const isCompanyExists = await CompanyRepository.findByEmail(
+      companyData.email
+    );
+
+    if (isCompanyExists) {
+      throw new Error("Company with this email already exists");
+    }
+
     const hashedPassword = await bcrypt.hash(companyData.password, 10);
     companyData.password = hashedPassword;
     const company = await CompanyRepository.create(companyData);

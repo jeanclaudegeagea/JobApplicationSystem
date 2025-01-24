@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
 
   if (!token) {
     return res.status(403).json({
-      message: "Access denied, token missing",
+      error: "Access denied, token missing",
     });
   }
 
@@ -24,7 +24,7 @@ module.exports = function (req, res, next) {
       req.companyId = companyDecoded.companyId; // Attach companyId to the request
       return next(); // It's a company, move on
     } catch (error) {
-      return res.status(403).json({ message: "Invalid or expired token" });
+      return res.status(403).json({ error: "Invalid or expired token" });
     }
   }
 };

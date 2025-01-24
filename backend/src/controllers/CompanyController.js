@@ -3,7 +3,19 @@ const CompanyService = require("../services/CompanyService");
 class CompanyController {
   async register(req, res) {
     try {
+      const requiredFields = ["name", "email", "phoneNumber", "password"];
+
       const companyData = req.body;
+
+      const missingFields = requiredFields.filter(
+        (field) => !companyData[field]?.trim()
+      );
+
+      if (missingFields.length > 0) {
+        return res.status(400).json({
+          error: `Missing required fields: ${missingFields.join(", ")}`,
+        });
+      }
       const newCompany = await CompanyService.createCompany(companyData);
       res.status(201).json({
         message: "Company registered successfully",

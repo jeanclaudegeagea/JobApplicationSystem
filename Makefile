@@ -5,3 +5,6 @@ client:
 
 server:
 	cd ./backend && npm start
+
+killPort:
+	npx kill-port 5173 && npx kill-port 5000

@@ -15,7 +15,7 @@ module.exports = function (req, res, next) {
     if (!decoded.companyId) {
       return res
         .status(403)
-        .json({ message: "Access denied, incorrect role (company expected)" });
+        .json({ error: "Access denied, incorrect role (company expected)" });
     }
 
     req.companyId = decoded.companyId;
