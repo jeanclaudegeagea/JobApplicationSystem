@@ -50,7 +50,7 @@ Thumbs.db
 dist/
 build/
 
-
+/backend/uploads
 
 # Miscellaneous files
 *.tgz

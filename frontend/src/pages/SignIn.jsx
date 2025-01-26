@@ -6,7 +6,11 @@ import {
   Box,
   Paper,
   IconButton,
+  Tab,
+  Tabs,
 } from "@mui/material";
+import BusinessIcon from "@mui/icons-material/Business";
+import PersonIcon from "@mui/icons-material/Person";
 import { Link } from "react-router"; // Correct import for Link
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -33,12 +37,18 @@ const validationSchema = yup.object({
 });
 
 const SignIn = () => {
+  const [tab, setTab] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { setAuth } = useAuth(); // Get setAuth function from context
+
+  const handleTabChange = useCallback((event, newValue) => {
+    setTab(newValue);
+    setErrors({});
+  }, []);
 
   const handleClickShowPassword = useCallback(() => {
     setShowPassword(!showPassword);
@@ -67,10 +77,13 @@ const SignIn = () => {
       setLoading(true);
       try {
         // Example: send request to your API
-        const { data } = await axios.post(`${URL}/users/login`, {
-          email,
-          password,
-        }); // Replace with actual API endpoint
+        const { data } = await axios.post(
+          `${URL}/${tab === 0 ? "users" : "companies"}/login`,
+          {
+            email,
+            password,
+          }
+        ); // Replace with actual API endpoint
 
         console.log(data);
         setEmail("");
@@ -115,6 +128,17 @@ const SignIn = () => {
         >
           Sign In
         </Typography>
+        <Tabs
+          value={tab}
+          onChange={handleTabChange}
+          variant="fullWidth"
+          className="mb-6"
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <Tab label="User" icon={<PersonIcon />} iconPosition="start" />
+          <Tab label="Company" icon={<BusinessIcon />} iconPosition="start" />
+        </Tabs>
         <Box
           component="form"
           noValidate

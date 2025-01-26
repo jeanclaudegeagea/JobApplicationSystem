@@ -13,4 +13,11 @@ const companySchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+companySchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.password = undefined;
+    return ret;
+  },
+});
+
 module.exports = mongoose.model("Company", companySchema);

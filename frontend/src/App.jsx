@@ -26,7 +26,7 @@ const App = () => {
 
       <Route
         path="/signin"
-        element={!isAuth ? <SignIn /> : <Navigate to="/" replace />}
+        element={!isAuth ? <SignIn /> : <Navigate to="/home" replace />}
       />
     </Routes>
   );

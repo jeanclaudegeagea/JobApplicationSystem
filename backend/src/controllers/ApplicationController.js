@@ -1,11 +1,21 @@
-const express = require("express");
 const ApplicationService = require("../services/ApplicationService");
+const UserService = require("../services/UserService");
 
 class ApplicationController {
   async createApplication(req, res) {
     try {
       const applicationData = req.body;
-      applicationData.user = req.userId;
+      const userId = req.userId;
+
+      const isProfileComplete = await UserService.isProfileComplete(userId);
+      if (!isProfileComplete) {
+        return res.status(400).json({
+          error:
+            "Your profile is incomplete. Please in your profile details before applying for a job.",
+        });
+      }
+
+      applicationData.user = userId;
       const application = await ApplicationService.createApplication(
         applicationData
       );

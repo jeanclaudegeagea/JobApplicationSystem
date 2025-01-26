@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext } from "react";
+import axios from "axios";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { URL } from "./constants";
 
 // Create context
 const AuthContext = createContext();
@@ -10,9 +12,46 @@ export const useAuth = () => {
 
 // AuthProvider component to wrap the app and provide context values
 export const AuthProvider = ({ children }) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const [isAuth, setIsAuth] = useState(false); // Default to false (not authenticated)
+  const [userType, setUserType] = useState(null);
 
-  const [isAuth, setIsAuth] = useState(!!userData); // Default to false (not authenticated)
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("userData"));
+    if (storedData && storedData.token) {
+      setIsAuth(true);
+      setUserType(storedData.type);
+      fetchProfile(storedData.token, storedData.type);
+    }
+  }, []);
+
+  const fetchProfile = async (token, type) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      let profileResponse;
+      if (type === "User") {
+        profileResponse = await axios.get(`${URL}/users/profile`, {
+          headers,
+        });
+      } else if (type === "Company") {
+        profileResponse = await axios.get(`${URL}/companies/company`, {
+          headers,
+        });
+      }
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({ ...profileResponse.data, token, type })
+      );
+    } catch (error) {
+      console.error("Error fetcing profile:", error);
+      setIsAuth(false);
+      setUserType(null);
+      localStorage.removeItem("userData");
+    }
+  };
 
   // Function to toggle authentication state
   const setAuth = (authStatus) => {
@@ -20,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuth, setAuth }}>
+    <AuthContext.Provider value={{ isAuth, setAuth, userType }}>
       {children}
     </AuthContext.Provider>
   );

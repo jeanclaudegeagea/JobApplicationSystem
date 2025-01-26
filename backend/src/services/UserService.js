@@ -33,6 +33,12 @@ class UserService {
     };
   }
 
+  async isProfileComplete(userId) {
+    const user = await UserRepository.findById(userId);
+    if (!user) throw new Error("User not found");
+    return user.isProfileComplete();
+  }
+
   async getUserById(id) {
     const user = await UserRepository.findById(id);
     if (!user) {

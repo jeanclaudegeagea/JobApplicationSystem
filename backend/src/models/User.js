@@ -29,6 +29,17 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+userSchema.methods.isProfileComplete = function () {
+  return (
+    this.name &&
+    this.email &&
+    this.phoneNumber &&
+    this.location !== "Not specified" &&
+    this.profilePicture !== "default_profile_picture_url" &&
+    this.cv !== "No CV uploaded"
+  );
+};
+
 userSchema.set("toJSON", {
   transform: (doc, ret) => {
     ret.password = undefined;
