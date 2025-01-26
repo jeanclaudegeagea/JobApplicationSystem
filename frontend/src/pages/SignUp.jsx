@@ -304,11 +304,16 @@ const SignUp = () => {
             "Register as Company"
           )}
         </Button>
-        <div className="flex justify-center mt-6">
-          <Link to="/signin" className="text-primary hover:text-blue-600">
-            Already have an account? Sign In
+        <Typography
+          variant="body2"
+          align="center"
+          sx={{ marginTop: 2, color: "grey.600" }}
+        >
+          Already have an account?{" "}
+          <Link to="/signin" className="text-primary text-blue-600">
+            Sign In
           </Link>
-        </div>
+        </Typography>
       </Box>
       <ToastContainer />
     </div>
