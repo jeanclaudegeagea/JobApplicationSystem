@@ -5,13 +5,13 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
-import { Home, Notifications } from "@mui/icons-material";
+import { Home, Notifications, Work, AddCircle } from "@mui/icons-material"; // Import icons
 import { useAuth } from "../../utils/AuthContext";
 import { useNavigate } from "react-router";
 
 const Navbar = () => {
   const {
-    userData: { user },
+    userData: { user, type, company },
   } = useAuth();
   const navigate = useNavigate();
 
@@ -20,29 +20,44 @@ const Navbar = () => {
       path: "/home",
       icon: <Home />,
     },
-    {
-      path: "/notification",
-      icon: (
-        <Badge>
-          <Notifications />
-        </Badge>
-      ),
-    },
-    {
-      path: "/profile",
-      icon: (
-        <Avatar
-          alt="Profile"
-          src={user.logo}
-          sx={{
-            width: 40,
-            height: 40,
-            "&:hover": { boxShadow: 3 },
-          }}
-        />
-      ),
-    },
   ];
+
+  // Add specific icons based on user type
+  if (type === "User") {
+    navElements.push({
+      path: "/apply-job",
+      icon: <Work />, // Example icon for "Apply Job"
+    });
+  } else if (type === "Company") {
+    navElements.push({
+      path: "/create-job",
+      icon: <AddCircle />, // Example icon for "Create Job"
+    });
+  }
+
+  navElements.push({
+    path: "/notification",
+    icon: (
+      <Badge color="error">
+        <Notifications />
+      </Badge>
+    ),
+  });
+
+  navElements.push({
+    path: "/profile",
+    icon: (
+      <Avatar
+        alt="Profile"
+        src={user?.logo || company?.logo}
+        sx={{
+          width: 40,
+          height: 40,
+          "&:hover": { boxShadow: 3 },
+        }}
+      />
+    ),
+  });
 
   return (
     <AppBar

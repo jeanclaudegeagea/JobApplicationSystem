@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/register", CompanyController.register);
 router.post("/login", CompanyController.login);
 
-router.get("/company", companyMiddleware, CompanyController.getCompany);
+router.get("/company/:userId", companyMiddleware, CompanyController.getCompany);
 router.put("/company", companyMiddleware, CompanyController.updateCompany);
 router.delete("/company", companyMiddleware, CompanyController.deleteCompany);
 
