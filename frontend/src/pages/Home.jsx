@@ -1,152 +1,110 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
-  Chip,
-  Divider,
   TextField,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Button,
   Skeleton,
   Slider,
-  List,
-  ListItem,
-  ListItemText,
-  Checkbox,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
 } from "@mui/material";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import SearchIcon from "@mui/icons-material/Search";
+import MapIcon from "@mui/icons-material/Map";
 import { useAuth } from "../utils/AuthContext";
 import { URL } from "../utils/constants";
-import { formatDistanceToNow } from "date-fns";
-import { mockJobs } from "../utils/dummy";
+import { useMediaQuery, useTheme } from "@mui/material"; // Added
+import JobCard from "./JobCard";
 
 const Home = () => {
   const { isAuth } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Advanced filtering state
-  const [filters, setFilters] = useState({
-    searchTerm: "",
-    minSalary: 50000,
-    maxSalary: 120000,
-    jobTypes: [],
-    experienceLevels: [],
+  const [filterOpen] = useState(false);
+  const [searchParams, setSearchParams] = useState({
+    title: "",
+    location: "",
+    jobType: "", // Changed to string, no longer an array
+    experienceLevel: "", // Changed to string, no longer an array
   });
 
-  // Sorting state
-  const [sortBy, setSortBy] = useState("recent");
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Check if screen size is small
 
-  // Job types and experience levels for filters
-  const jobTypes = [
-    "Full time",
-    "Part time",
-    "Internship",
-    "Project work",
-    "Volunteering",
-  ];
-  const experienceLevels = ["Entry level", "Intermediate", "Expert"];
-
-  const handleCheckboxChange = (filterType, value) => {
-    setFilters((prev) => {
-      const updatedFilter = prev[filterType].includes(value)
-        ? prev[filterType].filter((item) => item !== value)
-        : [...prev[filterType], value];
-      return { ...prev, [filterType]: updatedFilter };
-    });
-  };
-
-  // Memoized and filtered jobs
-  const filteredAndSortedJobs = useMemo(() => {
-    let processedJobs = jobs.filter(
-      (job) =>
-        (filters.searchTerm === "" ||
-          job.title.toLowerCase().includes(filters.searchTerm.toLowerCase())) &&
-        (!filters.jobTypes.length || filters.jobTypes.includes(job.jobType)) &&
-        (!filters.experienceLevels.length ||
-          filters.experienceLevels.includes(job.experienceLevel)) &&
-        parseInt(job.salary) >= filters.minSalary &&
-        parseInt(job.salary) <= filters.maxSalary
-    );
-
-    // Sorting logic
-    switch (sortBy) {
-      case "recent":
-        return processedJobs.sort(
-          (a, b) =>
-            new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
-        );
-      case "salary":
-        return processedJobs.sort(
-          (a, b) => parseInt(b.salary) - parseInt(a.salary)
-        );
-      default:
-        return processedJobs;
+  const fetchJobs = async () => {
+    if (!isAuth) {
+      setError("You must be logged in to view jobs.");
+      setLoading(false);
+      return;
     }
-  }, [jobs, filters, sortBy]);
 
-  const filteredJobs = useMemo(() => {
-    let jobs = mockJobs.filter((job) =>
-      job.title.toLowerCase().includes(filters.searchTerm.toLowerCase())
-    );
+    const token = JSON.parse(localStorage.getItem("userData"))?.token;
 
-    switch (filters.sortBy) {
-      case "recent":
-        return jobs.sort(
-          (a, b) => new Date(b.postedDate) - new Date(a.postedDate)
-        );
-      case "price":
-        return jobs.sort(
-          (a, b) =>
-            parseFloat(b.price.replace(/\$/g, "")) -
-            parseFloat(a.price.replace(/\$/g, ""))
-        );
-      default:
-        return jobs;
+    if (!token) {
+      setError("Token is missing. Please log in.");
+      setLoading(false);
+      return;
     }
-  }, [filters]);
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      if (!isAuth) {
-        setError("You must be logged in to view jobs.");
-        setLoading(false);
-        return;
-      }
-
-      const token = JSON.parse(localStorage.getItem("userData"))?.token;
-
-      if (!token) {
-        setError("Token is missing. Please log in.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await axios.get(`${URL}/jobs`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        setJobs(response.data);
-      } catch (err) {
-        setError("Failed to load jobs.");
-      } finally {
-        setLoading(false);
-      }
+    const params = {
+      title: searchParams.title || "",
+      location: searchParams.location || "",
+      jobType: searchParams.jobType || "", // Now just a string, no need to join
+      // salaryRange: searchParams.salaryRange.join(","),
+      experienceLevel: searchParams.experienceLevel || "", // Now just a string, no need to join
     };
 
+    try {
+      const response = await axios.get(`${URL}/jobs`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params,
+      });
+      setJobs(response.data);
+    } catch (err) {
+      setError("Failed to load jobs.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchJobs();
-  }, [isAuth]);
+  }, []);
+
+  const handleSearchChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSearch = () => {
+    setLoading(true);
+    fetchJobs();
+  };
+
+  const handleJobTypeChange = (e) => {
+    setSearchParams((prevParams) => ({
+      ...prevParams,
+      jobType: e.target.value, // Update jobType directly
+    }));
+  };
+
+  const handleExperienceLevelChange = (e) => {
+    setSearchParams((prevParams) => ({
+      ...prevParams,
+      experienceLevel: e.target.value, // Update experienceLevel directly
+    }));
+  };
 
   if (loading) {
     return (
@@ -174,172 +132,164 @@ const Home = () => {
   }
 
   return (
-    <div className="py-5 px-4  bg-gray-50">
-      <Box className="flex gap-3 flex-col">
-        {/* Search and Sort */}
-        <Box className=" flex justify-center  gap-4 items-center">
-          <TextField
-            label="Search by job title or skills"
-            variant="outlined"
-            fullWidth
-            value={filters.searchTerm}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, searchTerm: e.target.value }))
-            }
-            className="flex-grow max-w-xl"
-            slotProps={{
-              input: {
-                startAdornment: <SearchIcon className="mr-2 text-gray-500" />,
-              },
-            }}
-          />
-
-          <FormControl variant="outlined" className="min-w-[120px]">
-            <InputLabel>Sort By</InputLabel>
-            <Select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              label="Sort By"
+    <div className="py-5 px-4 bg-gray-50">
+      <Box className="grid grid-cols-1 gap-3 flex-col">
+        <Box className="items-center bg-black p-4 rounded-md">
+          <div className="mb-4">
+            <Typography variant="h4" className="text-white">
+              Find Your Dream Job Here <AutoAwesomeIcon className="ml-2" />
+            </Typography>
+          </div>
+          <div className="flex md:flex-row flex-col gap-4 bg-white p-2 rounded-md">
+            <TextField
+              label="Job title or keyword"
+              placeholder="e.g. Software Engineer"
+              variant="outlined"
+              fullWidth
+              className="flex-grow w-5/12"
+              slotProps={{
+                input: {
+                  startAdornment: <SearchIcon className="mr-2 text-gray-500" />,
+                },
+              }}
+              value={searchParams.title}
+              name="title"
+              onChange={handleSearchChange}
+            />
+            <TextField
+              label="Add country or city"
+              placeholder="e.g. United States"
+              variant="outlined"
+              fullWidth
+              className="flex-grow w-5/12"
+              slotProps={{
+                input: {
+                  startAdornment: <MapIcon className="mr-2 text-gray-500" />,
+                },
+              }}
+              value={searchParams.location}
+              name="location"
+              onChange={handleSearchChange}
+            />
+            <button
+              onClick={handleSearch}
+              className="md:w-4/12 w-full bg-blue-600 rounded-md text-white py-3.5"
             >
-              <MenuItem value="recent">Most Recent</MenuItem>
-              <MenuItem value="salary">Highest Salary</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Button
-            variant="outlined"
-            startIcon={<FilterListIcon />}
-            className="h-14"
-          >
-            Advanced Filters
-          </Button>
+              <Typography>SEARCH</Typography>
+            </button>
+          </div>
         </Box>
 
-        {/* Main Content */}
+        <Typography variant="h5">Recommended Jobs</Typography>
+
         <Box className="flex flex-grow gap-5">
-          {/* Sidebar */}
-          <Box className="w-full lg:w-1/4 bg-white p-6 rounded-xl shadow-md">
-            <Typography variant="h6" className="font-semibold mb-4">
-              Filters
-            </Typography>
+          <Box
+            className={`${
+              isSmallScreen ? (filterOpen ? "block" : "hidden") : "w-1/4"
+            } bg-white p-6 rounded-xl shadow-md transition-all duration-300`}
+          >
+            <div className="flex justify-between">
+              <Typography variant="h6">Filters</Typography>
+              <Typography
+                className="text-red-500 cursor-pointer"
+                onClick={() =>
+                  setSearchParams({
+                    title: "",
+                    location: "",
+                    jobType: "",
+                    salaryRange: [0, 1000000],
+                    experienceLevel: "",
+                  })
+                }
+              >
+                Clear all
+              </Typography>
+            </div>
 
-            {/* Job Types */}
-            <Typography variant="body1" className="font-medium mb-2">
-              Job Type
-            </Typography>
-            <List>
-              {jobTypes.map((type) => (
-                <ListItem key={type} disablePadding>
-                  <Checkbox
-                    checked={filters.jobTypes.includes(type)}
-                    onChange={() => handleCheckboxChange("jobTypes", type)}
+            {/* Job Type Filter (Radio Buttons) */}
+            <div className="mt-2">
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Job Type</FormLabel>
+                <RadioGroup
+                  value={searchParams.jobType}
+                  onChange={handleJobTypeChange}
+                >
+                  <FormControlLabel
+                    value="Full"
+                    control={<Radio />}
+                    label="Full Time"
                   />
-                  <ListItemText primary={type} />
-                </ListItem>
-              ))}
-            </List>
-
-            {/* Salary Range */}
-            <Typography variant="body1" className="font-medium mt-6 mb-2">
-              Salary Range
-            </Typography>
-            <Slider
-              value={[filters.minSalary, filters.maxSalary]}
-              onChange={(e, newValue) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  minSalary: newValue[0],
-                  maxSalary: newValue[1],
-                }))
-              }
-              valueLabelDisplay="auto"
-              min={50000}
-              max={120000}
-            />
-
-            {/* Experience Levels */}
-            <Typography variant="body1" className="font-medium mt-6 mb-2">
-              Experience Level
-            </Typography>
-            <List>
-              {experienceLevels.map((level) => (
-                <ListItem key={level} disablePadding>
-                  <Checkbox
-                    checked={filters.experienceLevels.includes(level)}
-                    onChange={() =>
-                      handleCheckboxChange("experienceLevels", level)
-                    }
+                  <FormControlLabel
+                    value="Part"
+                    control={<Radio />}
+                    label="Part Time"
                   />
-                  <ListItemText primary={level} />
-                </ListItem>
-              ))}
-            </List>
+                  <FormControlLabel
+                    value="Contract"
+                    control={<Radio />}
+                    label="Contract"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+
+            {/* Salary Range Filter */}
+            {/* <div className="mt-2">
+              <Typography>Salary Range</Typography>
+              <Slider
+                value={searchParams.salaryRange}
+                onChange={(e, newValue) =>
+                  setSearchParams((prevParams) => ({
+                    ...prevParams,
+                    salaryRange: newValue,
+                  }))
+                }
+                valueLabelDisplay="auto"
+                valueLabelFormat={(value) => `$${value}`}
+                min={0}
+                max={1000000}
+              />
+            </div> */}
+
+            {/* Experience Level Filter (Radio Buttons) */}
+            <div className="mt-2">
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Experience Level</FormLabel>
+                <RadioGroup
+                  value={searchParams.experienceLevel}
+                  onChange={handleExperienceLevelChange}
+                >
+                  <FormControlLabel
+                    value="Entry"
+                    control={<Radio />}
+                    label="Entry Level"
+                  />
+                  <FormControlLabel
+                    value="Intermediate"
+                    control={<Radio />}
+                    label="Intermediate"
+                  />
+                  <FormControlLabel
+                    value="Expert"
+                    control={<Radio />}
+                    label="Expert"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
           </Box>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {filteredJobs.map((job) => (
-              <Card
-                key={job.id}
-                className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow duration-300"
-              >
-                <CardContent>
-                  <Box display="flex" alignItems="center" className="mb-4">
-                    <img
-                      src={job.logo}
-                      alt={job.companyName}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <Typography variant="h6" className="ml-3 font-semibold">
-                      {job.companyName}
-                    </Typography>
-                  </Box>
-
-                  <Typography
-                    variant="h5"
-                    className="font-semibold text-gray-800 mb-2"
-                  >
-                    {job.title}
-                  </Typography>
-
-                  <Box className="flex flex-wrap gap-2 mb-2">
-                    <Chip
-                      label={job.experienceLevel}
-                      color="primary"
-                      size="small"
-                    />
-                    <Chip label={job.jobType} color="success" size="small" />
-                  </Box>
-
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className="mb-4 text-gray-700"
-                  >
-                    {job.description}
-                  </Typography>
-
-                  <Typography
-                    variant="h6"
-                    className="font-semibold text-green-600"
-                  >
-                    {job.price}
-                  </Typography>
-
-                  <Divider className="my-4" />
-
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className="text-gray-500"
-                  >
-                    Posted{" "}
-                    {formatDistanceToNow(new Date(job.postedDate), {
-                      addSuffix: true,
-                    })}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Check if no jobs are available and display message */}
+            {jobs.length === 0 ? (
+              <Box className="w-full text-center mt-10">
+                <Typography variant="h6" color="textSecondary">
+                  No jobs available right now.
+                </Typography>
+              </Box>
+            ) : (
+              jobs.map((job) => <JobCard key={job.id} job={job} />)
+            )}
           </div>
         </Box>
       </Box>

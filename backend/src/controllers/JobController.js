@@ -27,12 +27,34 @@ class JobController {
 
   async getAllJobs(req, res) {
     try {
-      const filter = req.query;
+      const filter = {};
 
-      if (req.query.companyId) {
-        filter.company = req.query.companyId; // Set the company filter based on the query parameter
+      // Extract filters from query parameters
+      if (req.query.title) {
+        filter.title = { $regex: req.query.title, $options: "i" }; // Case-insensitive search
       }
 
+      if (req.query.location) {
+        filter.location = { $regex: req.query.location, $options: "i" };
+      }
+
+      if (req.query.jobType) {
+        filter.jobType = { $regex: req.query.jobType, $options: "i" };
+      }
+
+      if (req.query.experienceLevel) {
+        filter.experienceLevel = {
+          $regex: req.query.experienceLevel,
+          $options: "i",
+        };
+      }
+
+      // Handling companyId filter if provided
+      if (req.query.companyId) {
+        filter.company = req.query.companyId;
+      }
+
+      // Fetch filtered jobs
       const jobs = await JobService.getAllJobs(filter);
       res.status(200).json(jobs);
     } catch (error) {
