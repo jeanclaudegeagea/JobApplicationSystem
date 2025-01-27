@@ -2,6 +2,8 @@ import { publicRoutes, privateRoutes } from "./routes";
 import SignIn from "./pages/SignIn";
 import { Routes, Route, Navigate } from "react-router";
 import { useAuth } from "./utils/AuthContext"; // Import the useAuth hook
+import Navbar from "./components/shared/NavBar";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const { isAuth } = useAuth(); // Get the isAuth value from context
@@ -12,7 +14,17 @@ const App = () => {
         <Route
           key={path}
           path={path}
-          element={isAuth ? <Component /> : <Navigate to="/signin" replace />}
+          element={
+            isAuth ? (
+              <div className="flex flex-col gap-6 bg-gray-50">
+                <Navbar />
+                <Component />
+                <ToastContainer />
+              </div>
+            ) : (
+              <Navigate to="/signin" replace />
+            )
+          }
         />
       ))}
 

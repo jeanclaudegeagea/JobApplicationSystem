@@ -44,8 +44,10 @@ class CompanyController {
 
   async getCompany(req, res) {
     try {
-      const company = await CompanyService.getCompanyById(req.userId);
-      res.status(200).json(company);
+      const { userId } = req.params;
+
+      const company = await CompanyService.getCompanyById(userId);
+      res.status(200).json({ company });
     } catch (error) {
       res.status(500).json({ error: error.json });
     }

@@ -4,7 +4,6 @@ class JobController {
   async createJob(req, res) {
     try {
       const jobData = req.body;
-      jobData.company = req.companyId;
       const job = await JobService.createJob(jobData);
       res.status(201).json(job);
     } catch (error) {

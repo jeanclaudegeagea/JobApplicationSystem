@@ -23,7 +23,10 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   location: { type: String, default: "Not specified" }, // Added default value
   experience: [experienceSchema],
-  profilePicture: { type: String, default: "default_profile_picture_url" }, // Added default value
+  profilePicture: {
+    type: String,
+    default: "http://localhost:5000/uploads/images/defaultuser.png",
+  }, // Added default value
   university: [universitySchema],
   cv: { type: String, default: "No CV uploaded" }, // Added default value
   createdAt: { type: Date, default: Date.now },

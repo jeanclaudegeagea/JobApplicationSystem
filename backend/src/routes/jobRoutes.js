@@ -10,7 +10,7 @@ router.get("/", combinedMiddleware, JobController.getAllJobs);
 router.get("/:id", combinedMiddleware, JobController.getJobById);
 
 // Routes accessible only by companies
-router.post("/", companyMiddleware, JobController.createJob);
+router.post("/create", companyMiddleware, JobController.createJob);
 router.put("/:id", companyMiddleware, JobController.updateJobById);
 router.delete("/:id", companyMiddleware, JobController.deleteJobById);
 

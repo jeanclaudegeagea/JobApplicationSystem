@@ -1,5 +1,9 @@
-import Home from "./pages/Home";
+import Notification from "./pages/Notification";
+import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
+import ApplyJob from "./pages/ApplyJob";
+import Home from "./pages/Home";
+import CreateJob from "./pages/CreateJob";
 
 export const privateRoutes = [
   {
@@ -9,6 +13,22 @@ export const privateRoutes = [
   {
     path: "/home",
     component: Home,
+  },
+  {
+    path: "/profile",
+    component: Profile,
+  },
+  {
+    path: "/notification",
+    component: Notification,
+  },
+  {
+    path: "/create-job",
+    component: CreateJob,
+  },
+  {
+    path: "/apply-job",
+    component: ApplyJob,
   },
 ];
 

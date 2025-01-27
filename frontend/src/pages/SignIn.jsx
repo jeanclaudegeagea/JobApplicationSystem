@@ -43,7 +43,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { setAuth } = useAuth(); // Get setAuth function from context
+  const { setAuth, setUserData } = useAuth(); // Get setAuth function from context
 
   const handleTabChange = useCallback((event, newValue) => {
     setTab(newValue);
@@ -85,10 +85,10 @@ const SignIn = () => {
           }
         ); // Replace with actual API endpoint
 
-        console.log(data);
         setEmail("");
         setPassword("");
         setAuth(true);
+        setUserData(data);
         localStorage.setItem("userData", JSON.stringify(data));
       } catch (error) {
         console.error("Sign-in failed:", error);
