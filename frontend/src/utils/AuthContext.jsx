@@ -13,13 +13,13 @@ export const useAuth = () => {
 // AuthProvider component to wrap the app and provide context values
 export const AuthProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false); // Default to false (not authenticated)
-  const [userType, setUserType] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("userData"));
     if (storedData && storedData.token) {
       setIsAuth(true);
-      setUserType(storedData.type);
+      setUserData(storedData);
       fetchProfile(storedData.token, storedData.type);
     }
   }, []);
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetcing profile:", error);
       setIsAuth(false);
-      setUserType(null);
+      setUserData(null);
       localStorage.removeItem("userData");
     }
   };
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuth, setAuth, userType }}>
+    <AuthContext.Provider value={{ isAuth, setAuth, userData, setUserData }}>
       {children}
     </AuthContext.Provider>
   );

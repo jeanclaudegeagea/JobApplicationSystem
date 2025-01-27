@@ -1,4 +1,6 @@
 import Home from "./pages/Home";
+import Notification from "./pages/Notification";
+import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 
 export const privateRoutes = [
@@ -9,6 +11,14 @@ export const privateRoutes = [
   {
     path: "/home",
     component: Home,
+  },
+  {
+    path: "/profile",
+    component: Profile,
+  },
+  {
+    path: "/notification",
+    component: Notification,
   },
 ];
 

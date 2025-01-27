@@ -174,7 +174,7 @@ const Home = () => {
   }
 
   return (
-    <div className="py-5 px-4  bg-gray-50">
+    <div className="px-4  bg-gray-50">
       <Box className="flex gap-3 flex-col">
         {/* Search and Sort */}
         <Box className=" flex justify-center  gap-4 items-center">
