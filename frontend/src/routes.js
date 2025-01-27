@@ -1,7 +1,6 @@
 import Notification from "./pages/Notification";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
-import ApplyJob from "./pages/ApplyJob";
 import Home from "./pages/Home";
 import CreateJob from "./pages/CreateJob";
 
@@ -28,7 +27,7 @@ export const privateRoutes = [
   },
   {
     path: "/apply-job",
-    component: ApplyJob,
+    component: Home,
   },
 ];
 
