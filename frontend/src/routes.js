@@ -3,6 +3,7 @@ import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import CreateJob from "./pages/CreateJob";
+import ApplyJob from "./pages/ApplyJob";
 
 export const privateRoutes = [
   {
@@ -27,7 +28,7 @@ export const privateRoutes = [
   },
   {
     path: "/apply-job",
-    component: Home,
+    component: ApplyJob,
   },
 ];
 
