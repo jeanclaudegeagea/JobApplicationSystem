@@ -19,11 +19,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { URL } from "../utils/constants";
 import { terror } from "../utils/toasts";
+import { useAuth } from "../utils/AuthContext";
 
 const JobModal = ({ open, onClose, id }) => {
   const formatDate = (date) => new Date(date).toLocaleDateString();
   const [job, setJob] = useState({});
   const token = JSON.parse(localStorage.getItem("userData"))?.token;
+  const { setIsSessionExpiredOpen } = useAuth();
 
   const fetchJob = async () => {
     try {
@@ -36,7 +38,10 @@ const JobModal = ({ open, onClose, id }) => {
       setJob(response.data);
     } catch (error) {
       console.error("Error fetching job details", error);
-      terror(error?.response?.data?.error || "Error");
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
     }
   };
 

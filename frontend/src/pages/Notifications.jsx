@@ -93,9 +93,9 @@ const Notifications = () => {
     } catch (error) {
       console.log(error);
 
-      if (error?.repsonse?.data?.error === "Session expired") {
+      if (error["response"]["data"]["error"] === "Session expired") {
         setIsSessionExpiredOpen(true);
-      } else terror(error?.repsonse?.data?.error || "Error");
+      } else terror(error["response"]["data"]["error"] || "Error");
     }
   };
 

@@ -19,9 +19,10 @@ import { useAuth } from "../utils/AuthContext";
 import { URL } from "../utils/constants";
 import { useMediaQuery, useTheme } from "@mui/material"; // Added
 import JobCard from "./JobCard";
+import { terror } from "../utils/toasts";
 
 const ApplyJob = () => {
-  const { isAuth } = useAuth();
+  const { isAuth, setIsSessionExpiredOpen } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -68,7 +69,13 @@ const ApplyJob = () => {
         params,
       });
       setJobs(response.data);
-    } catch (err) {
+    } catch (error) {
+      console.log(error);
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
+
       setError("Failed to load jobs.");
     } finally {
       setLoading(false);

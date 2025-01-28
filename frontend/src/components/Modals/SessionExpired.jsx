@@ -54,6 +54,7 @@ const SessionExpired = () => {
               setAuth(false);
               setUserData(null);
               setIsSessionExpiredOpen(false);
+              localStorage.removeItem("userData");
             }}
           >
             Re-Login

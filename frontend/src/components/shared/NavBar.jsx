@@ -16,6 +16,7 @@ import TextField from "@mui/material/TextField"; // MUI TextField for the search
 const Navbar = () => {
   const {
     userData: { user, type, company, token },
+    setIsSessionExpiredOpen,
   } = useAuth();
   const navigate = useNavigate();
   const [allUsers, setAllUsers] = useState([]);
@@ -77,7 +78,10 @@ const Navbar = () => {
       setAllUsers(data); // Store all users in state
     } catch (error) {
       console.log(error);
-      terror(error?.response?.data?.error || "Error");
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
     }
   };
 
