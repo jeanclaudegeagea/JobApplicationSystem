@@ -24,7 +24,7 @@ module.exports = function (req, res, next) {
       req.companyId = companyDecoded.companyId; // Attach companyId to the request
       return next(); // It's a company, move on
     } catch (error) {
-      return res.status(403).json({ error: "Invalid or expired token" });
+      return res.status(403).json({ error: "Session expired" });
     }
   }
 };

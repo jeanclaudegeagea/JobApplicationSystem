@@ -10,6 +10,7 @@ const connectionRoutes = require("./src/routes/connectionRoutes");
 const notificationsRoutes = require("./src/routes/notificationsRoute");
 const jobRoutes = require("./src/routes/jobRoutes");
 const applicationRoutes = require("./src/routes/applicationRoutes");
+const allUsersRoutes = require("./src/routes/allUsersRoutes");
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/connections/", connectionRoutes);
 app.use("/api/notifications", notificationsRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/allUsers", allUsersRoutes);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from "react-router";
 import { useAuth } from "./utils/AuthContext"; // Import the useAuth hook
 import Navbar from "./components/shared/NavBar";
 import { ToastContainer } from "react-toastify";
+import SessionExpired from "./components/Modals/SessionExpired";
 
 const App = () => {
   const { isAuth } = useAuth(); // Get the isAuth value from context
@@ -19,6 +20,7 @@ const App = () => {
               <div className="flex flex-col gap-6 bg-gray-50">
                 <Navbar />
                 <Component />
+                <SessionExpired />
                 <ToastContainer />
               </div>
             ) : (

@@ -19,6 +19,7 @@ import { terror } from "../utils/toasts";
 
 const CreateJob = () => {
   const {
+    setIsSessionExpiredOpen,
     userData: { company, token },
   } = useAuth();
 
@@ -114,6 +115,8 @@ const CreateJob = () => {
         closingDate: formattedDate,
       });
     } catch (error) {
+      console.log(error);
+
       if (error.name === "ValidationError") {
         const errorMessages = {};
         error.inner.forEach((err) => {
@@ -121,7 +124,10 @@ const CreateJob = () => {
         });
         setErrors(errorMessages); // Set error messages
       }
-      terror(error?.response?.data?.error || "Error");
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
     } finally {
       setIsLoading(false);
     }

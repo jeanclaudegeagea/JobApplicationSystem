@@ -1,17 +1,17 @@
 const express = require("express");
 const NotificationController = require("../controllers/NotificationController");
-const authMiddleware = require("../middleware/authMiddleware");
+const combinedMiddleware = require("../middleware/combinedMiddleware");
 
 const router = express.Router();
 
 router.get(
   "/get/notifications/:userId",
-  authMiddleware,
+  combinedMiddleware,
   NotificationController.getUsersNotifications
 );
 router.patch(
   "/readNotification/:notificationId",
-  authMiddleware,
+  combinedMiddleware,
   NotificationController.readNotification
 );
 

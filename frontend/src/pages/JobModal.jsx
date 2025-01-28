@@ -7,10 +7,10 @@ import {
   Divider,
   Avatar,
   Chip,
-  Grid,
   Link,
   IconButton,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
@@ -18,11 +18,14 @@ import WorkIcon from "@mui/icons-material/Work";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { URL } from "../utils/constants";
+import { terror } from "../utils/toasts";
+import { useAuth } from "../utils/AuthContext";
 
 const JobModal = ({ open, onClose, id }) => {
   const formatDate = (date) => new Date(date).toLocaleDateString();
   const [job, setJob] = useState({});
   const token = JSON.parse(localStorage.getItem("userData"))?.token;
+  const { setIsSessionExpiredOpen } = useAuth();
 
   const fetchJob = async () => {
     try {
@@ -35,6 +38,10 @@ const JobModal = ({ open, onClose, id }) => {
       setJob(response.data);
     } catch (error) {
       console.error("Error fetching job details", error);
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
     }
   };
 
@@ -57,7 +64,6 @@ const JobModal = ({ open, onClose, id }) => {
           boxShadow: 24,
           p: 4,
           overflowY: "auto",
-          position: "relative", // Required for positioning the close button
         }}
       >
         {/* Close Button */}
