@@ -10,6 +10,15 @@ const notificationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  fromUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: "fromUserType", // Dynamic reference
+  },
+  fromUserType: {
+    type: String,
+    required: true,
+    enum: ["User", "Company"], // Add all possible model names
+  },
   message: {
     type: String,
     required: true,

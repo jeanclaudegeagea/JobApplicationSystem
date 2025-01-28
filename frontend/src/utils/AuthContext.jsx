@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false); // Default to false (not authenticated)
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSessionExpiredOpen, setIsSessionExpiredOpen] = useState(false);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("userData"));
@@ -105,7 +106,16 @@ export const AuthProvider = ({ children }) => {
     );
 
   return (
-    <AuthContext.Provider value={{ isAuth, setAuth, userData, setUserData }}>
+    <AuthContext.Provider
+      value={{
+        isAuth,
+        setAuth,
+        userData,
+        setUserData,
+        isSessionExpiredOpen,
+        setIsSessionExpiredOpen,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

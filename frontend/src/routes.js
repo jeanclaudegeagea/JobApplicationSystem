@@ -1,4 +1,4 @@
-import Notification from "./pages/Notification";
+import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
@@ -20,7 +20,7 @@ export const privateRoutes = [
   },
   {
     path: "/notification",
-    component: Notification,
+    component: Notifications,
   },
   {
     path: "/create-job",

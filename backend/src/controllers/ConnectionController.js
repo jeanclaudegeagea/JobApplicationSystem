@@ -1,5 +1,6 @@
 const ConnectionService = require("../services/ConnectionService");
 const UserRepository = require("../repositories/UserRepository");
+const CompanyRepository = require("../repositories/CompanyRepository");
 
 class ConnectionController {
   async follow(req, res, next) {
@@ -13,7 +14,11 @@ class ConnectionController {
         followingType
       );
 
-      const followerData = await UserRepository.findById(follower);
+      let followerData = await UserRepository.findById(follower);
+
+      if (!followerData) {
+        followerData = await CompanyRepository.findById(follower);
+      }
 
       req.body.message = `${followerData.name} followed you`;
 

@@ -45,7 +45,7 @@ const Navbar = () => {
   navElements.push({
     path: "/notification",
     icon: (
-      <Badge color="error">
+      <Badge badgeContent={6} color="error">
         <Notifications />
       </Badge>
     ),
@@ -56,7 +56,7 @@ const Navbar = () => {
     icon: (
       <Avatar
         alt="Profile"
-        src={user?.logo || company?.logo}
+        src={user?.profilePicture || company?.logo}
         sx={{
           width: 40,
           height: 40,
