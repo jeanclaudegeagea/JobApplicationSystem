@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const companySchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -11,7 +14,7 @@ const companySchema = new mongoose.Schema({
   description: { type: String, default: "No description provided" }, // Added default value
   logo: {
     type: String,
-    default: "http://localhost:5000/uploads/images/defaultcompany.png",
+    default: `/uploads/images/defaultcompany.png`,
   }, // Added default value
   createdAt: { type: Date, default: Date.now },
 });

@@ -1,5 +1,8 @@
 const upload = require("../config/multerConfig");
 const UserService = require("../services/UserService");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 class UserController {
   async register(req, res) {

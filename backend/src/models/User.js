@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const experienceSchema = new mongoose.Schema({
   company: { type: String, required: true },
@@ -25,7 +28,7 @@ const userSchema = new mongoose.Schema({
   experience: [experienceSchema],
   profilePicture: {
     type: String,
-    default: "http://localhost:5000/uploads/images/defaultuser.png",
+    default: "/uploads/images/defaultuser.png",
   }, // Added default value
   university: [universitySchema],
   cv: { type: String, default: "No CV uploaded" }, // Added default value
