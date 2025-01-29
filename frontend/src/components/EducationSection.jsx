@@ -16,6 +16,15 @@ const EducationSection = ({
   handleAddUniversity,
   handleRemoveUniversity,
 }) => {
+  const formatDate = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = `${d.getMonth() + 1}`.padStart(2, "0");
+    const day = `${d.getDate()}`.padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <Box flex={1}>
       <Box
@@ -66,7 +75,7 @@ const EducationSection = ({
             <TextField
               label="Start Date"
               type="date"
-              value={education.startDate}
+              value={formatDate(education.startDate)}
               onChange={(e) =>
                 handleUniversityChange(index, "startDate", e.target.value)
               }
@@ -77,7 +86,7 @@ const EducationSection = ({
             <TextField
               label="End Date"
               type="date"
-              value={education.endDate}
+              value={formatDate(education.endDate)}
               onChange={(e) =>
                 handleUniversityChange(index, "endDate", e.target.value)
               }

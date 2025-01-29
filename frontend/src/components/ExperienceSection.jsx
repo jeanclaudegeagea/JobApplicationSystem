@@ -16,6 +16,16 @@ const ExperienceSection = ({
   handleAddExperience,
   handleRemoveExperience,
 }) => {
+  // Helper function to format date to YYYY-MM-DD
+  const formatDate = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = `${d.getMonth() + 1}`.padStart(2, "0");
+    const day = `${d.getDate()}`.padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <Box flex={1}>
       <Box
@@ -57,7 +67,7 @@ const ExperienceSection = ({
             <TextField
               label="Start Date"
               type="date"
-              value={job.startDate}
+              value={formatDate(job.startDate)}
               onChange={(e) =>
                 handleExperienceChange(index, "startDate", e.target.value)
               }
@@ -68,7 +78,7 @@ const ExperienceSection = ({
             <TextField
               label="End Date"
               type="date"
-              value={job.endDate}
+              value={formatDate(job.endDate)}
               onChange={(e) =>
                 handleExperienceChange(index, "endDate", e.target.value)
               }
