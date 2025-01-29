@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { URL } from "./constants";
 import { ClipLoader } from "react-spinners";
+import { terror } from "../utils/toasts";
+import { ToastContainer } from "react-toastify";
 
 // Create context
 const AuthContext = createContext();
@@ -17,6 +19,45 @@ export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSessionExpiredOpen, setIsSessionExpiredOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const markAsRead = (id) => {
+    setNotifications((prev) =>
+      prev.map((notif) =>
+        notif.id === id ? { ...notif, isRead: true } : notif
+      )
+    );
+  };
+
+  const readNotifications = notifications.filter(
+    (notif) => !notif.isRead
+  ).length;
+
+  const getNotification = async (storedData) => {
+    const user = storedData?.company || storedData?.user;
+
+    if (!user) return;
+
+    try {
+      const { data } = await axios.get(
+        `${URL}/notifications/get/notifications/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${storedData.token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setNotifications(data);
+    } catch (error) {
+      console.log(error);
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
+    }
+  };
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("userData"));
@@ -24,6 +65,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuth(true);
       setUserData(storedData);
       fetchProfile(storedData.token, storedData.type, storedData);
+      getNotification(storedData);
     } else {
       setIsLoading(false);
     }
@@ -115,9 +157,13 @@ export const AuthProvider = ({ children }) => {
         fetchProfile,
         isSessionExpiredOpen,
         setIsSessionExpiredOpen,
+        notifications,
+        markAsRead,
+        readNotifications,
       }}
     >
       {children}
+      <ToastContainer />
     </AuthContext.Provider>
   );
 };

@@ -13,11 +13,15 @@ import { terror } from "../../utils/toasts";
 import { URL } from "../../utils/constants";
 import TextField from "@mui/material/TextField"; // MUI TextField for the search bar
 
+const uploadsUrl = "http://localhost:5000";
+
 const Navbar = () => {
   const {
     userData: { user, type, company, token },
     setIsSessionExpiredOpen,
+    readNotifications,
   } = useAuth();
+  const globalUser = user ? { ...user } : { ...company };
   const navigate = useNavigate();
   const [allUsers, setAllUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,7 +50,7 @@ const Navbar = () => {
   navElements.push({
     path: "/notification",
     icon: (
-      <Badge badgeContent={6} color="error">
+      <Badge badgeContent={readNotifications} color="error">
         <Notifications />
       </Badge>
     ),
@@ -57,7 +61,11 @@ const Navbar = () => {
     icon: (
       <Avatar
         alt="Profile"
-        src={user?.profilePicture || company?.logo}
+        src={
+          user
+            ? `${uploadsUrl}${user?.profilePicture}`
+            : `${uploadsUrl}${company?.logo}`
+        }
         sx={{
           width: 40,
           height: 40,
@@ -95,8 +103,10 @@ const Navbar = () => {
     if (search === "") {
       setFilteredUsers([]);
     } else {
-      const filtered = allUsers.filter((user) =>
-        user.name.toLowerCase().includes(search.toLowerCase())
+      const filtered = allUsers.filter(
+        (user) =>
+          user.name.toLowerCase().includes(search.toLowerCase()) &&
+          user._id !== globalUser?._id
       );
       setFilteredUsers(filtered);
     }
