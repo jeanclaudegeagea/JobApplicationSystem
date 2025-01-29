@@ -8,6 +8,10 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
 } from "@mui/material";
 import {
   Edit,
@@ -19,7 +23,7 @@ import {
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { URL } from "../utils/constants";
+import { BASE_URL, URL } from "../utils/constants";
 
 const ProfileHeader = ({
   profile,
@@ -29,10 +33,14 @@ const ProfileHeader = ({
   handleImageUpload,
   handleCvUpload,
   handleSubmit,
-  handleLogout, // Add this prop for handling logout
+  handleLogout,
 }) => {
   const [openCvModal, setOpenCvModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openFollowersModal, setOpenFollowersModal] = useState(false);
+  const [openFollowingsModal, setOpenFollowingsModal] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [followings, setFollowings] = useState([]);
 
   const handleOpenDeleteModal = () => setOpenDeleteModal(true);
   const handleCloseDeleteModal = () => setOpenDeleteModal(false);
@@ -40,13 +48,53 @@ const ProfileHeader = ({
   const handleOpenCvModal = () => setOpenCvModal(true);
   const handleCloseCvModal = () => setOpenCvModal(false);
 
-  // Function to handle the "Cancel" action
-  const handleCancel = () => {
-    handleEditToggle(); // Exit edit mode
-    // Optionally, you can reset the form to its original state here
+  const handleOpenFollowersModal = () => setOpenFollowersModal(true);
+  const handleCloseFollowersModal = () => setOpenFollowersModal(false);
+
+  const handleOpenFollowingsModal = () => setOpenFollowingsModal(true);
+  const handleCloseFollowingsModal = () => setOpenFollowingsModal(false);
+
+  const fetchFollowers = async () => {
+    try {
+      const localData = JSON.parse(localStorage.getItem("userData"));
+      const token = localData.token;
+
+      const response = await axios.get(`${URL}/connections/get/followers`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFollowers(response.data);
+    } catch (error) {
+      console.error("Error fetching followers", error);
+    }
   };
 
-  // Effect to handle the Esc key press
+  const fetchFollowings = async () => {
+    try {
+      const localData = JSON.parse(localStorage.getItem("userData"));
+      const token = localData.token;
+
+      const response = await axios.get(`${URL}/connections/get/followings`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFollowings(response.data);
+    } catch (error) {
+      console.error("Error fetching followings", error);
+    }
+  };
+
+  const handleCancel = () => {
+    handleEditToggle();
+  };
+
+  useEffect(() => {
+    fetchFollowers();
+    fetchFollowings();
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape" && isEditing) {
@@ -116,7 +164,7 @@ const ProfileHeader = ({
         </Box>
       ) : (
         <Avatar
-          alt={`http://localhost:5000${profile.name}`}
+          alt={profile.name}
           src={
             profile.profilePicture
               ? profile.profilePicture
@@ -171,7 +219,6 @@ const ProfileHeader = ({
             >
               Delete
             </Button>
-            {/* Add Logout Button */}
             <Button
               variant="outlined"
               color="primary"
@@ -193,15 +240,29 @@ const ProfileHeader = ({
           </Box>
           <Box textAlign="center" className="flex items-center gap-2">
             <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-              300
+              {followers.length}
             </Typography>
-            <Typography variant="body2">Followers</Typography>
+            <Button
+              onClick={() => {
+                handleOpenFollowersModal();
+                fetchFollowers();
+              }}
+            >
+              <Typography variant="body2">Followers</Typography>
+            </Button>
           </Box>
           <Box textAlign="center" className="flex items-center gap-2">
             <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-              180
+              {followings.length}
             </Typography>
-            <Typography variant="body2">Following</Typography>
+            <Button
+              onClick={() => {
+                handleOpenFollowingsModal();
+                fetchFollowings();
+              }}
+            >
+              <Typography variant="body2">Following</Typography>
+            </Button>
           </Box>
         </Stack>
 
@@ -277,13 +338,67 @@ const ProfileHeader = ({
         >
           <DialogContent>
             <iframe
-              src={`http://localhost:5000${profile.cv}`}
+              src={`${BASE_URL}${profile.cv}`}
               width="100%"
               height="700px"
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseCvModal} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openFollowersModal} onClose={handleCloseFollowersModal}>
+          <DialogContent>
+            <Typography variant="h6">Followers</Typography>
+            <List>
+              {followers.length > 0 ? (
+                followers.map((follower) => (
+                  <ListItem key={follower.id}>
+                    <ListItemAvatar>
+                      <Avatar src={follower.profilePicture} />
+                    </ListItemAvatar>
+                    <ListItemText primary={follower.name} />
+                  </ListItem>
+                ))
+              ) : (
+                <Typography variant="body1" sx={{ textAlign: "center" }}>
+                  No followers
+                </Typography>
+              )}
+            </List>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseFollowersModal} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openFollowingsModal} onClose={handleCloseFollowingsModal}>
+          <DialogContent>
+            <Typography variant="h6">Following</Typography>
+            <List>
+              {followings.length > 0 ? (
+                followings.map((following) => (
+                  <ListItem key={following.id}>
+                    <ListItemAvatar>
+                      <Avatar src={following.profilePicture} />
+                    </ListItemAvatar>
+                    <ListItemText primary={following.name} />
+                  </ListItem>
+                ))
+              ) : (
+                <Typography variant="body1" sx={{ textAlign: "center" }}>
+                  No followings
+                </Typography>
+              )}
+            </List>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseFollowingsModal} color="primary">
               Close
             </Button>
           </DialogActions>

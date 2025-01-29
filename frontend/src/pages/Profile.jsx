@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Stack, Tabs, Tab } from "@mui/material";
+import { ListAlt, Work } from "@mui/icons-material";
 import axios from "axios";
 import { URL } from "../utils/constants";
 import EducationSection from "../components/EducationSection";
@@ -192,10 +193,18 @@ const Profile = () => {
         handleLogout={handleLogout}
       />
 
-      <Box sx={{ width: "100%", marginTop: 4 }}>
+      <Box sx={{ width: "100%", marginTop: 1 }}>
         <Tabs value={tabValue} onChange={handleTabChange} centered>
-          <Tab label="Experience & Education" />
-          <Tab label="Applied Jobs" />
+          <Tab
+            icon={<Work />}
+            label="Experience & Education"
+            iconPosition="start" // Places the icon next to the label
+          />
+          <Tab
+            icon={<ListAlt />}
+            label="Applied Jobs"
+            iconPosition="start" // Places the icon next to the label
+          />
         </Tabs>
       </Box>
 
