@@ -27,7 +27,7 @@ const Profile = () => {
     try {
       const localData = JSON.parse(localStorage.getItem("userData"));
       const token = localData.token;
-      const userId = localData.user._id;
+      const userId = localData?.user?._id;
 
       const response = await axios.get(`${URL}/users/profile/${userId}`, {
         headers: {

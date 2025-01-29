@@ -13,6 +13,8 @@ import { terror } from "../../utils/toasts";
 import { URL } from "../../utils/constants";
 import TextField from "@mui/material/TextField"; // MUI TextField for the search bar
 
+const uploadsUrl = "http://localhost:5000";
+
 const Navbar = () => {
   const {
     userData: { user, type, company, token },
@@ -57,7 +59,11 @@ const Navbar = () => {
     icon: (
       <Avatar
         alt="Profile"
-        src={user?.profilePicture || company?.logo}
+        src={
+          user
+            ? `${uploadsUrl}${user?.profilePicture}`
+            : `${uploadsUrl}${company?.logo}`
+        }
         sx={{
           width: 40,
           height: 40,
