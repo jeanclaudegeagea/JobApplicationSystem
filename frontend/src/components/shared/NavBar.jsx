@@ -19,7 +19,9 @@ const Navbar = () => {
   const {
     userData: { user, type, company, token },
     setIsSessionExpiredOpen,
+    readNotifications,
   } = useAuth();
+  const globalUser = user ? { ...user } : { ...company };
   const navigate = useNavigate();
   const [allUsers, setAllUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,7 +50,7 @@ const Navbar = () => {
   navElements.push({
     path: "/notification",
     icon: (
-      <Badge badgeContent={6} color="error">
+      <Badge badgeContent={readNotifications} color="error">
         <Notifications />
       </Badge>
     ),
@@ -101,8 +103,10 @@ const Navbar = () => {
     if (search === "") {
       setFilteredUsers([]);
     } else {
-      const filtered = allUsers.filter((user) =>
-        user.name.toLowerCase().includes(search.toLowerCase())
+      const filtered = allUsers.filter(
+        (user) =>
+          user.name.toLowerCase().includes(search.toLowerCase()) &&
+          user._id !== globalUser?._id
       );
       setFilteredUsers(filtered);
     }
