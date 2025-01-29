@@ -9,8 +9,17 @@ import {
   DialogActions,
   DialogContent,
 } from "@mui/material";
-import { Edit, Delete, CameraAlt, Done } from "@mui/icons-material";
-import { useState } from "react";
+import {
+  Edit,
+  Delete,
+  CameraAlt,
+  Done,
+  Cancel,
+  ExitToApp,
+} from "@mui/icons-material";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { URL } from "../utils/constants";
 
 const ProfileHeader = ({
   profile,
@@ -20,11 +29,54 @@ const ProfileHeader = ({
   handleImageUpload,
   handleCvUpload,
   handleSubmit,
+  handleLogout, // Add this prop for handling logout
 }) => {
   const [openCvModal, setOpenCvModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const handleOpenDeleteModal = () => setOpenDeleteModal(true);
+  const handleCloseDeleteModal = () => setOpenDeleteModal(false);
 
   const handleOpenCvModal = () => setOpenCvModal(true);
   const handleCloseCvModal = () => setOpenCvModal(false);
+
+  // Function to handle the "Cancel" action
+  const handleCancel = () => {
+    handleEditToggle(); // Exit edit mode
+    // Optionally, you can reset the form to its original state here
+  };
+
+  // Effect to handle the Esc key press
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && isEditing) {
+        handleCancel();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isEditing, handleCancel]);
+
+  const handleDeleteAccount = async () => {
+    try {
+      const localData = JSON.parse(localStorage.getItem("userData"));
+      const token = localData.token;
+
+      await axios.delete(`${URL}/users/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      localStorage.removeItem("userData");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting account", error);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center">
@@ -99,13 +151,35 @@ const ProfileHeader = ({
             >
               {isEditing ? "Save" : "Edit"}
             </Button>
+            {isEditing && (
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<Cancel />}
+                className="w-full"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            )}
             <Button
               variant="outlined"
               color="error"
               startIcon={<Delete />}
               className="w-full"
+              onClick={handleOpenDeleteModal}
             >
               Delete
+            </Button>
+            {/* Add Logout Button */}
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<ExitToApp />}
+              className="w-full"
+              onClick={handleLogout}
+            >
+              Logout
             </Button>
           </Box>
         </div>
@@ -175,6 +249,25 @@ const ProfileHeader = ({
             </Button>
           </Box>
         )}
+
+        <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
+          <DialogContent>
+            <Typography variant="h6">
+              Are you sure you want to delete your account?
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              This action cannot be undone.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDeleteModal} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleDeleteAccount} color="error">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         <Dialog
           open={openCvModal}

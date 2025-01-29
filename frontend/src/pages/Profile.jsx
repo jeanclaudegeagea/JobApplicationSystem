@@ -174,6 +174,11 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("userData");
+    window.location.reload();
+  };
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center" padding={4}>
       <ProfileHeader
@@ -184,6 +189,7 @@ const Profile = () => {
         handleImageUpload={handleImageUpload}
         handleCvUpload={handleCvUpload}
         handleSubmit={handleSubmit}
+        handleLogout={handleLogout}
       />
 
       <Box sx={{ width: "100%", marginTop: 4 }}>

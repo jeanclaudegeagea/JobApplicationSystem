@@ -112,6 +112,7 @@ export const AuthProvider = ({ children }) => {
         setAuth,
         userData,
         setUserData,
+        fetchProfile,
         isSessionExpiredOpen,
         setIsSessionExpiredOpen,
       }}
