@@ -5,57 +5,6 @@ import { ClipLoader } from "react-spinners";
 import { terror } from "../utils/toasts";
 import { ToastContainer } from "react-toastify";
 
-const dummyNotifications = [
-  {
-    id: 1,
-    message: "You have a new connection request!",
-    date: new Date("2025-01-28T14:00:00"),
-    user: "John Doe",
-    userAvatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    isRead: false,
-  },
-  {
-    id: 2,
-    message: "Your article has been commented on.",
-    date: new Date("2025-01-27T11:30:00"),
-    user: "Jane Smith",
-    userAvatar: "https://randomuser.me/api/portraits/women/2.jpg",
-    isRead: false,
-  },
-  {
-    id: 3,
-    message: "Someone viewed your profile.",
-    date: new Date("2025-01-26T18:15:00"),
-    user: "Bob Johnson",
-    userAvatar: "https://randomuser.me/api/portraits/men/3.jpg",
-    isRead: true,
-  },
-  {
-    id: 4,
-    message: "You have a new connection request!",
-    date: new Date("2025-01-28T14:00:00"),
-    user: "John Doe",
-    userAvatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    isRead: false,
-  },
-  {
-    id: 5,
-    message: "Your article has been commented on.",
-    date: new Date("2025-01-27T11:30:00"),
-    user: "Jane Smith",
-    userAvatar: "https://randomuser.me/api/portraits/women/2.jpg",
-    isRead: false,
-  },
-  {
-    id: 6,
-    message: "Someone viewed your profile.",
-    date: new Date("2025-01-26T18:15:00"),
-    user: "Bob Johnson",
-    userAvatar: "https://randomuser.me/api/portraits/men/3.jpg",
-    isRead: true,
-  },
-];
-
 // Create context
 const AuthContext = createContext();
 
@@ -70,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSessionExpiredOpen, setIsSessionExpiredOpen] = useState(false);
-  const [notifications, setNotifications] = useState(dummyNotifications);
+  const [notifications, setNotifications] = useState([]);
 
   const markAsRead = (id) => {
     setNotifications((prev) =>
