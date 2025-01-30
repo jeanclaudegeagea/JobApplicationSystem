@@ -18,6 +18,10 @@ class ConnectionService {
   async getAllFollowings(userId) {
     return await ConnectionRepository.getAllFollowings(userId);
   }
+
+  async isFollowing(follower, following) {
+    return await ConnectionRepository.isFollowing(follower, following);
+  }
 }
 
 module.exports = new ConnectionService();

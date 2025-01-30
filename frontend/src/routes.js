@@ -4,6 +4,8 @@ import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import CreateJob from "./pages/CreateJob";
 import ApplyJob from "./pages/ApplyJob";
+import SearchedUser from "./pages/SearchedUser";
+import SearchedCompany from "./pages/SearchedCompany";
 
 export const privateRoutes = [
   {
@@ -29,6 +31,14 @@ export const privateRoutes = [
   {
     path: "/apply-job",
     component: ApplyJob,
+  },
+  {
+    path: "/searchedUser/:userId",
+    component: SearchedUser,
+  },
+  {
+    path: "/searchedCompany/:companyId",
+    component: SearchedCompany,
   },
 ];
 

@@ -23,7 +23,9 @@ import {
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_URL, URL } from "../../utils/constants";
+import { BASE_URL, URL } from "../utils/constants";
+import { terror } from "../utils/toasts";
+import { useAuth } from "../utils/AuthContext";
 
 const ProfileHeader = ({
   profile,
@@ -41,6 +43,7 @@ const ProfileHeader = ({
   const [openFollowingsModal, setOpenFollowingsModal] = useState(false);
   const [followers, setFollowers] = useState([]);
   const [followings, setFollowings] = useState([]);
+  const { setIsSessionExpiredOpen } = useAuth();
 
   const handleOpenDeleteModal = () => setOpenDeleteModal(true);
   const handleCloseDeleteModal = () => setOpenDeleteModal(false);
@@ -67,6 +70,10 @@ const ProfileHeader = ({
       setFollowers(response.data);
     } catch (error) {
       console.error("Error fetching followers", error);
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
     }
   };
 
@@ -83,6 +90,10 @@ const ProfileHeader = ({
       setFollowings(response.data);
     } catch (error) {
       console.error("Error fetching followings", error);
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
     }
   };
 
@@ -123,6 +134,10 @@ const ProfileHeader = ({
       window.location.reload();
     } catch (error) {
       console.error("Error deleting account", error);
+
+      if (error["response"]["data"]["error"] === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else terror(error["response"]["data"]["error"] || "Error");
     }
   };
 

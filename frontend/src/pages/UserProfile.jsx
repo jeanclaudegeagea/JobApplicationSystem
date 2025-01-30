@@ -7,6 +7,8 @@ import EducationSection from "../components/UserProfile/EducationSection";
 import AppliedJobsSection from "../components/UserProfile/AppliedJobsSection";
 import ExperienceSection from "../components/UserProfile/ExperienceSection";
 import ProfileHeader from "../components/UserProfile/ProfileHeader";
+import { terror } from "../utils/toasts";
+import { useAuth } from "../utils/AuthContext";
 
 const UserProfile = () => {
   const [profile, setProfile] = useState({
@@ -23,6 +25,7 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profilePictureFile, setProfilePictureFile] = useState(null);
   const [cvFile, setCvFile] = useState(null);
+  const { setIsSessionExpiredOpen } = useAuth();
 
   const fetchProfile = async () => {
     try {
@@ -46,6 +49,12 @@ const UserProfile = () => {
       setProfile(updatedProfile);
     } catch (error) {
       console.error("Error fetching profile", error);
+
+      if (error.response?.data?.error === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else {
+        terror(error.response?.data?.error || "Error");
+      }
     }
   };
 
@@ -172,6 +181,12 @@ const UserProfile = () => {
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile", error);
+
+      if (error.response?.data?.error === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else {
+        terror(error.response?.data?.error || "Error");
+      }
     }
   };
 

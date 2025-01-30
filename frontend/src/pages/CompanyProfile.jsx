@@ -5,6 +5,8 @@ import { Box, Typography, Tabs, Tab } from "@mui/material";
 import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 import ProfileHeader from "../components/CompanyProfile/ProfileHeader";
 import JobCard from "./JobCard";
+import { terror } from "../utils/toasts";
+import { useAuth } from "../utils/AuthContext";
 
 const CompanyProfile = () => {
   const [profile, setProfile] = useState({
@@ -22,6 +24,7 @@ const CompanyProfile = () => {
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
   const [tabValue, setTabValue] = useState(0);
+  const { setIsSessionExpiredOpen } = useAuth();
 
   const fetchProfile = async () => {
     try {
@@ -47,6 +50,12 @@ const CompanyProfile = () => {
       setProfile(updatedProfile);
     } catch (error) {
       console.error("Error fetching profile", error);
+
+      if (error.response?.data?.error === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else {
+        terror(error.response?.data?.error || "Error");
+      }
     }
   };
 
@@ -65,6 +74,12 @@ const CompanyProfile = () => {
       setJobs(response.data);
     } catch (error) {
       console.error("Error fetching jobs", error);
+
+      if (error.response?.data?.error === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else {
+        terror(error.response?.data?.error || "Error");
+      }
     }
   };
 
@@ -86,6 +101,12 @@ const CompanyProfile = () => {
       setApplications(response.data);
     } catch (error) {
       console.error("Error fetching applications", error);
+
+      if (error.response?.data?.error === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else {
+        terror(error.response?.data?.error || "Error");
+      }
     }
   };
 
@@ -146,6 +167,12 @@ const CompanyProfile = () => {
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile", error);
+
+      if (error.response?.data?.error === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else {
+        terror(error.response?.data?.error || "Error");
+      }
     }
   };
 

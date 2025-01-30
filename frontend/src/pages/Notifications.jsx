@@ -26,7 +26,7 @@ const Notifications = () => {
     <div className="w-full">
       {notifications.map((notif) => (
         <Card
-          key={notif.id}
+          key={notif._id}
           className={`flex items-center space-x-4 mb-4 p-4 shadow-lg rounded-xl border ${
             notif.isRead ? "bg-gray-100" : "bg-white"
           } max-w-3xl mx-auto`}
@@ -47,7 +47,7 @@ const Notifications = () => {
             </Typography>
           </CardContent>
           {!notif.isRead && (
-            <IconButton onClick={() => markAsRead(notif.id)}>
+            <IconButton onClick={() => markAsRead(notif._id)}>
               <CheckCircleIcon color="success" />
             </IconButton>
           )}

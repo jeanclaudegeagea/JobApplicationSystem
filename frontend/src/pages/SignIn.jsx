@@ -43,7 +43,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { setAuth, setUserData } = useAuth(); // Get setAuth function from context
+  const { setAuth, setUserData, getNotification } = useAuth(); // Get setAuth function from context
 
   const handleTabChange = useCallback((event, newValue) => {
     setTab(newValue);
@@ -89,6 +89,7 @@ const SignIn = () => {
         setPassword("");
         setAuth(true);
         setUserData(data);
+        getNotification(data);
         localStorage.setItem("userData", JSON.stringify(data));
       } catch (error) {
         console.error("Sign-in failed:", error);

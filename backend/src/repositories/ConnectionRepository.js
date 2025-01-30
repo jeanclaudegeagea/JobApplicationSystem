@@ -3,10 +3,13 @@ const Connection = require("../models/Connection");
 
 class ConnectionRepository {
   async create(follower, followerType, following, followingType) {
+    console.log(follower);
+    console.log(following);
+
     const newConnection = new Connection({
-      following: mongoose.Types.ObjectId.createFromHexString(follower),
+      follower: mongoose.Types.ObjectId.createFromHexString(follower),
       followerType,
-      follower: mongoose.Types.ObjectId.createFromHexString(following),
+      following: mongoose.Types.ObjectId.createFromHexString(following),
       followingType,
     });
 
@@ -27,6 +30,12 @@ class ConnectionRepository {
     return await Connection.find({
       follower: userId,
     });
+  }
+  async isFollowing(follower, following) {
+    return await Connection.findOne({
+      follower,
+      following,
+    }).lean();
   }
 }
 

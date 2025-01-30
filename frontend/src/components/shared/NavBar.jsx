@@ -10,10 +10,8 @@ import { useAuth } from "../../utils/AuthContext";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { terror } from "../../utils/toasts";
-import { URL } from "../../utils/constants";
+import { URL, BASE_URL } from "../../utils/constants";
 import TextField from "@mui/material/TextField"; // MUI TextField for the search bar
-
-const uploadsUrl = "http://localhost:5000";
 
 const Navbar = () => {
   const {
@@ -63,8 +61,8 @@ const Navbar = () => {
         alt="Profile"
         src={
           user
-            ? `${uploadsUrl}${user?.profilePicture}`
-            : `${uploadsUrl}${company?.logo}`
+            ? `${BASE_URL}${user?.profilePicture}`
+            : `${BASE_URL}${company?.logo}`
         }
         sx={{
           width: 40,
@@ -108,6 +106,7 @@ const Navbar = () => {
           user.name.toLowerCase().includes(search.toLowerCase()) &&
           user._id !== globalUser?._id
       );
+
       setFilteredUsers(filtered);
     }
   };
@@ -173,7 +172,15 @@ const Navbar = () => {
                   <div
                     key={index}
                     className="flex items-center p-2 cursor-pointer hover:bg-gray-100"
-                    onClick={() => navigate(`/profile/${user.id}`)}
+                    onClick={() =>
+                      navigate(
+                        `${
+                          user.type === "User"
+                            ? "/searchedUser"
+                            : "/searchedCompany"
+                        }/${user._id}`
+                      )
+                    }
                   >
                     <Avatar
                       alt={user.name}
