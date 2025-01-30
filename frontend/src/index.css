@@ -12,4 +12,10 @@
 body {
   font-family: "Roboto, sans-serif";
   background-color: #f9fafb;
+  height: 100vh;
+}
+
+#root {
+  height: 100%;
+  background-color: #f9fafb;
 }

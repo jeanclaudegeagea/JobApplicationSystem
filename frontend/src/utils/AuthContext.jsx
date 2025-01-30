@@ -21,12 +21,42 @@ export const AuthProvider = ({ children }) => {
   const [isSessionExpiredOpen, setIsSessionExpiredOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
-  const markAsRead = (id) => {
+  const markAsRead = async (id) => {
+    // Optimistic UI update: Mark as read locally first
     setNotifications((prev) =>
       prev.map((notif) =>
-        notif.id === id ? { ...notif, isRead: true } : notif
+        notif._id === id ? { ...notif, isRead: true } : notif
       )
     );
+
+    try {
+      await axios.patch(
+        `${URL}/notifications/readNotification/${id}`, // Correct URL
+        {}, // Empty request body (if needed)
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+
+      // Revert change on failure
+      setNotifications((prev) =>
+        prev.map((notif) =>
+          notif._id === id ? { ...notif, isRead: false } : notif
+        )
+      );
+
+      // Use optional chaining to avoid crashes
+      if (error.response?.data?.error === "Session expired") {
+        setIsSessionExpiredOpen(true);
+      } else {
+        terror(error.response?.data?.error || "Error");
+      }
+    }
   };
 
   const readNotifications = notifications.filter(
@@ -160,6 +190,7 @@ export const AuthProvider = ({ children }) => {
         notifications,
         markAsRead,
         readNotifications,
+        getNotification,
       }}
     >
       {children}

@@ -70,6 +70,20 @@ class ConnectionController {
       });
     }
   }
+
+  async isFollowing(req, res) {
+    try {
+      const { follower, following } = req.body;
+
+      const result = await ConnectionService.isFollowing(follower, following);
+
+      res.status(201).json(result === null ? false : true);
+    } catch (error) {
+      res.status(400).json({
+        error: error.message,
+      });
+    }
+  }
 }
 
 module.exports = new ConnectionController();
