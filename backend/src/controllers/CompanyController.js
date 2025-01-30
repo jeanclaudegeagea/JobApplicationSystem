@@ -1,3 +1,4 @@
+const upload = require("../config/multerConfig");
 const CompanyService = require("../services/CompanyService");
 
 class CompanyController {
@@ -64,7 +65,7 @@ class CompanyController {
           updateData.logo = `/uploads/${req.files.logo[0].filename}`;
         }
         const updatedCompany = await CompanyService.updateCompanyById(
-          req.userId,
+          req.companyId,
           updateData
         );
         res

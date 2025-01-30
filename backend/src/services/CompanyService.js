@@ -39,9 +39,15 @@ class CompanyService {
 
   async updateCompanyById(id, updateData) {
     if (updateData.password) {
-      updateData.password = await bcrypt.hash(updateData.password, 10);
+      const salt = await bcrypt.genSalt(10);
+      updateData.password = await bcrypt.hash(updateData.password, salt);
     }
-    return await CompanyRepository.updateById(id, updateData);
+
+    const updatedCompany = await CompanyRepository.updateById(id, updateData);
+    if (!updatedCompany) {
+      throw new Error("Company not found");
+    }
+    return updatedCompany;
   }
 
   async deleteCompanyById(id) {
