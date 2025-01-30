@@ -22,6 +22,10 @@ class ConnectionService {
   async isFollowing(follower, following) {
     return await ConnectionRepository.isFollowing(follower, following);
   }
+
+  async getJobsFromFollowedCompanies(userId) {
+    return await ConnectionRepository.getJobsFromFollowedCompanies(userId);
+  }
 }
 
 module.exports = new ConnectionService();

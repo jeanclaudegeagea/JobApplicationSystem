@@ -33,4 +33,10 @@ router.get(
   ConnectionController.getAllFollowings
 );
 
+router.get(
+  "/job/companies/:userId",
+  authMiddleware,
+  ConnectionController.getJobsFromFollowedCompanies
+);
+
 module.exports = router;
