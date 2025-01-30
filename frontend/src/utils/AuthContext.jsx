@@ -84,7 +84,6 @@ export const AuthProvider = ({ children }) => {
       console.log(error);
 
       if (error["response"]["data"]["error"] === "Session expired") {
-        setIsSessionExpiredOpen(true);
       } else terror(error["response"]["data"]["error"] || "Error");
     }
   };

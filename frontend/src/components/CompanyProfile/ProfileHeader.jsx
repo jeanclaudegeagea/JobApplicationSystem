@@ -17,6 +17,7 @@ import {
   ExitToApp,
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
+import { URL } from "../../utils/constants";
 
 const ProfileHeader = ({
   profile,
