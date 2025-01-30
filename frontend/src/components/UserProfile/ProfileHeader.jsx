@@ -61,12 +61,17 @@ const ProfileHeader = ({
     try {
       const localData = JSON.parse(localStorage.getItem("userData"));
       const token = localData.token;
+      const userData = localData?.user || localData?.company;
 
-      const response = await axios.get(`${URL}/connections/get/followers`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${URL}/connections/get/followers/${userData?._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setFollowers(response.data);
     } catch (error) {
       console.error("Error fetching followers", error);
@@ -81,12 +86,17 @@ const ProfileHeader = ({
     try {
       const localData = JSON.parse(localStorage.getItem("userData"));
       const token = localData.token;
+      const userData = localData?.user || localData?.company;
 
-      const response = await axios.get(`${URL}/connections/get/followings`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${URL}/connections/get/followings/${userData?._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setFollowings(response.data);
     } catch (error) {
       console.error("Error fetching followings", error);
@@ -371,9 +381,13 @@ const ProfileHeader = ({
             <List>
               {followers.length > 0 ? (
                 followers.map((follower) => (
-                  <ListItem key={follower.id}>
+                  <ListItem key={follower._id}>
                     <ListItemAvatar>
-                      <Avatar src={follower.profilePicture} />
+                      <Avatar
+                        src={`${BASE_URL}${
+                          follower?.profilePicture || follower?.logo
+                        }`}
+                      />
                     </ListItemAvatar>
                     <ListItemText primary={follower.name} />
                   </ListItem>
@@ -398,9 +412,13 @@ const ProfileHeader = ({
             <List>
               {followings.length > 0 ? (
                 followings.map((following) => (
-                  <ListItem key={following.id}>
+                  <ListItem key={following._id}>
                     <ListItemAvatar>
-                      <Avatar src={following.profilePicture} />
+                      <Avatar
+                        src={`${BASE_URL}${
+                          following?.profilePicture || following?.logo
+                        }`}
+                      />
                     </ListItemAvatar>
                     <ListItemText primary={following.name} />
                   </ListItem>
