@@ -75,10 +75,10 @@ const SignUp = () => {
   const [companyPassword, setCompanyPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleTabChange = useCallback((event, newValue) => {
+  const handleTabChange = (event, newValue) => {
     setTab(newValue);
     setErrors({});
-  }, []);
+  };
 
   const handleShowPassword = useCallback(() => {
     setShowPassword((prev) => !prev);

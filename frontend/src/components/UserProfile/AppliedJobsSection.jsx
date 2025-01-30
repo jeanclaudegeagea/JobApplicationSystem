@@ -1,4 +1,5 @@
 import { Typography, Box, Paper, Stack } from "@mui/material";
+import { format } from "date-fns";
 
 const AppliedJobsSection = () => {
   return (

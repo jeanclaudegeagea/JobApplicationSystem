@@ -45,10 +45,10 @@ const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const { setAuth, setUserData, getNotification } = useAuth(); // Get setAuth function from context
 
-  const handleTabChange = useCallback((event, newValue) => {
+  const handleTabChange = (event, newValue) => {
     setTab(newValue);
     setErrors({});
-  }, []);
+  };
 
   const handleClickShowPassword = useCallback(() => {
     setShowPassword(!showPassword);
@@ -67,39 +67,36 @@ const SignIn = () => {
     return Object.keys(validationErrors).length === 0;
   };
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-      // Validate form fields
-      if (!validate()) return;
+    // Validate form fields
+    if (!validate()) return;
 
-      setLoading(true);
-      try {
-        // Example: send request to your API
-        const { data } = await axios.post(
-          `${URL}/${tab === 0 ? "users" : "companies"}/login`,
-          {
-            email,
-            password,
-          }
-        ); // Replace with actual API endpoint
+    setLoading(true);
+    try {
+      // Example: send request to your API
+      const { data } = await axios.post(
+        `${URL}/${tab === 0 ? "users" : "companies"}/login`,
+        {
+          email,
+          password,
+        }
+      ); // Replace with actual API endpoint
 
-        setEmail("");
-        setPassword("");
-        setAuth(true);
-        setUserData(data);
-        getNotification(data);
-        localStorage.setItem("userData", JSON.stringify(data));
-      } catch (error) {
-        console.error("Sign-in failed:", error);
-        terror(error?.response?.data?.error || "Error");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [email, password]
-  );
+      setEmail("");
+      setPassword("");
+      setAuth(true);
+      setUserData(data);
+      getNotification(data);
+      localStorage.setItem("userData", JSON.stringify(data));
+    } catch (error) {
+      console.error("Sign-in failed:", error);
+      terror(error?.response?.data?.error || "Error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box

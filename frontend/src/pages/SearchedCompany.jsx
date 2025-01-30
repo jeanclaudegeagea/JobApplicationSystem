@@ -40,11 +40,10 @@ const SearchedCompany = () => {
       setCompany(data.company);
     } catch (error) {
       console.log(error);
-      if (error.response?.data?.error === "Session expired") {
+
+      if (error["response"]["data"]["error"] === "Session expired") {
         setIsSessionExpiredOpen(true);
-      } else {
-        terror(error.response?.data?.error || "Error");
-      }
+      } else terror(error["response"]["data"]["error"] || "Error");
     } finally {
       setLoading(false);
     }
@@ -72,11 +71,10 @@ const SearchedCompany = () => {
       );
     } catch (error) {
       setIsFollowing(isFollowing);
-      if (error.response?.data?.error === "Session expired") {
+
+      if (error["response"]["data"]["error"] === "Session expired") {
         setIsSessionExpiredOpen(true);
-      } else {
-        terror(error.response?.data?.error || "Error");
-      }
+      } else terror(error["response"]["data"]["error"] || "Error");
     } finally {
       setIsPending(false);
     }
@@ -100,11 +98,9 @@ const SearchedCompany = () => {
 
       setIsFollowing(data);
     } catch (error) {
-      if (error.response?.data?.error === "Session expired") {
+      if (error["response"]["data"]["error"] === "Session expired") {
         setIsSessionExpiredOpen(true);
-      } else {
-        terror(error.response?.data?.error || "Error");
-      }
+      } else terror(error["response"]["data"]["error"] || "Error");
     }
   };
 

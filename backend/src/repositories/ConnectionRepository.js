@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Connection = require("../models/Connection");
+const User = require("../models/User");
+const Company = require("../models/Company");
 
 class ConnectionRepository {
   async create(follower, followerType, following, followingType) {
@@ -22,14 +24,56 @@ class ConnectionRepository {
     });
   }
   async getAllFollowers(userId) {
-    return await Connection.find({
+    const result = await Connection.find({
       following: userId,
     });
+
+    const mappedResult = await Promise.all(
+      result.map(async (followerData) => {
+        const { follower, followerType } = followerData;
+
+        let data;
+
+        if (followerType === "User") {
+          data = await User.findById(follower);
+        } else if (followerType === "Company") {
+          data = await Company.findById(follower);
+        }
+
+        return {
+          ...followerData.toObject(), // Convert Mongoose document to plain object
+          ...data?.toObject(),
+        };
+      })
+    );
+
+    return mappedResult;
   }
   async getAllFollowings(userId) {
-    return await Connection.find({
+    const result = await Connection.find({
       follower: userId,
     });
+
+    const mappedResult = await Promise.all(
+      result.map(async (followingData) => {
+        const { following, followingType } = followingData;
+
+        let data;
+
+        if (followingType === "User") {
+          data = await User.findById(following);
+        } else if (followingType === "Company") {
+          data = await Company.findById(following);
+        }
+
+        return {
+          ...followingData.toObject(), // Convert Mongoose document to plain object
+          ...data?.toObject(),
+        };
+      })
+    );
+
+    return mappedResult;
   }
   async isFollowing(follower, following) {
     return await Connection.findOne({

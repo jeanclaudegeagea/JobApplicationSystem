@@ -23,12 +23,12 @@ router.post(
 );
 
 router.get(
-  "/get/followers",
+  "/get/followers/:userId",
   combinedMiddleware,
   ConnectionController.getAllFollowers
 );
 router.get(
-  "/get/followings",
+  "/get/followings/:userId",
   combinedMiddleware,
   ConnectionController.getAllFollowings
 );

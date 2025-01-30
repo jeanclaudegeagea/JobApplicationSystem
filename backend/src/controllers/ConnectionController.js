@@ -46,7 +46,7 @@ class ConnectionController {
   }
   async getAllFollowers(req, res) {
     try {
-      const { userId } = req.body;
+      const { userId } = req.params;
 
       const result = await ConnectionService.getAllFollowers(userId);
 
@@ -59,7 +59,7 @@ class ConnectionController {
   }
   async getAllFollowings(req, res) {
     try {
-      const { userId } = req.body;
+      const { userId } = req.params;
 
       const result = await ConnectionService.getAllFollowings(userId);
 
