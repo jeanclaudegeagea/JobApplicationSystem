@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Connection = require("../models/Connection");
 const User = require("../models/User");
 const Company = require("../models/Company");
+const Job = require("../models/Job");
 
 class ConnectionRepository {
   async create(follower, followerType, following, followingType) {
@@ -80,6 +81,39 @@ class ConnectionRepository {
       follower,
       following,
     }).lean();
+  }
+
+  async getJobsFromFollowedCompanies(userId) {
+    // Fetch all companies the user follows
+    const companiesFollowed = await Connection.find({
+      follower: userId,
+      followingType: "Company",
+    });
+
+    // Fetch jobs for each followed company
+    const mappedJobs = await Promise.all(
+      companiesFollowed.map(async (companyFollowed) => {
+        const { following } = companyFollowed;
+
+        // Get company details
+        const companyData = await Company.findById(following);
+        if (!companyData) return null; // Skip if company doesn't exist
+
+        // Get jobs posted by the company
+        const companyJobs = await Job.find({ company: following });
+
+        // Map each job with the required format
+        return companyJobs.map((job) => ({
+          text: `${companyData.name} created a job at ${new Date(
+            job.postedAt
+          ).toLocaleDateString()}`,
+          companyLogo: companyData.logo, // Assuming company has a logo field
+        }));
+      })
+    );
+
+    // Flatten the array and filter out null values
+    return mappedJobs.flat().filter(Boolean);
   }
 }
 

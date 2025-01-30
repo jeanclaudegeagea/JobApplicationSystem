@@ -84,6 +84,22 @@ class ConnectionController {
       });
     }
   }
+
+  async getJobsFromFollowedCompanies(req, res) {
+    try {
+      const { userId } = req.params;
+
+      const result = await ConnectionService.getJobsFromFollowedCompanies(
+        userId
+      );
+
+      return res.status(201).json(result);
+    } catch (error) {
+      res.status(400).json({
+        error: error.message,
+      });
+    }
+  }
 }
 
 module.exports = new ConnectionController();
