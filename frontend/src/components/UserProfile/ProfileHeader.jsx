@@ -23,9 +23,9 @@ import {
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_URL, URL } from "../utils/constants";
-import { terror } from "../utils/toasts";
-import { useAuth } from "../utils/AuthContext";
+import { BASE_URL, URL } from "../../utils/constants";
+import { terror } from "../../utils/toasts";
+import { useAuth } from "../../utils/AuthContext";
 
 const ProfileHeader = ({
   profile,
