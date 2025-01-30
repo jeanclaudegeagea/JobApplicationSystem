@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 // Filter file types (e.g., .png, .jpg for profile picture, .pdf for CV)
 const fileFilter = (req, file, cb) => {
-  if (file.fieldname === "profilePicture") {
+  if (file.fieldname === "profilePicture" || file.fieldname === "logo") {
     if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
       return cb(null, true);
     }
