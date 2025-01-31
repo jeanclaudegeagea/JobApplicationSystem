@@ -259,12 +259,6 @@ const ProfileHeader = ({
         <Stack direction="row" spacing={4} sx={{ marginTop: 2 }}>
           <Box textAlign="center" className="flex items-center gap-2">
             <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-              150
-            </Typography>
-            <Typography variant="body2">Posts</Typography>
-          </Box>
-          <Box textAlign="center" className="flex items-center gap-2">
-            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
               {followers.length}
             </Typography>
             <Button
