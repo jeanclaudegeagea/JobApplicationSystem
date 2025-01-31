@@ -107,7 +107,7 @@ const SearchedCompany = () => {
   useEffect(() => {
     fetchCompanyData();
     isConnection();
-  }, []);
+  }, [companyId]);
 
   if (loading) {
     return (

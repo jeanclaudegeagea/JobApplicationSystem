@@ -96,7 +96,7 @@ const SearchedUser = () => {
   useEffect(() => {
     fetchUserData();
     isConnection();
-  }, []);
+  }, [userId]);
 
   if (loading) {
     return (
