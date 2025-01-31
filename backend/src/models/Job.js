@@ -21,4 +21,16 @@ const jobSchema = new mongoose.Schema({
   closingDate: { type: Date },
 });
 
+jobSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const job = await this.model.findOne(this.getFilter()); // Get the job being deleted
+    if (job) {
+      await mongoose.model("Application").deleteMany({ job: job._id });
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = mongoose.model("Job", jobSchema);
