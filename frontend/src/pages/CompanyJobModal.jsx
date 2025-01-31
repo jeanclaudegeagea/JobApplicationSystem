@@ -5,7 +5,6 @@ import {
   Typography,
   Button,
   TextField,
-  Chip,
   Divider,
 } from "@mui/material";
 import axios from "axios";
@@ -41,7 +40,13 @@ const CompanyJobModal = ({ open, onClose, job, fetchJob }) => {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg w-11/12 max-w-2xl">
+      <Box
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg w-11/12 max-w-2xl"
+        sx={{
+          maxHeight: "80vh",
+          overflowY: "auto",
+        }}
+      >
         <Typography variant="h4" className="mb-4">
           {job.title}
         </Typography>
@@ -98,9 +103,21 @@ const CompanyJobModal = ({ open, onClose, job, fetchJob }) => {
               fullWidth
               margin="normal"
             />
-            <Button onClick={handleSave} color="primary" variant="contained">
-              Save
-            </Button>
+            <Box display="flex" justifyContent="space-between" mt={2}>
+              <Button onClick={handleSave} color="primary" variant="contained">
+                Save
+              </Button>
+              <Button
+                onClick={() => {
+                  onClose();
+                  setIsEditing(false);
+                }}
+                color="secondary"
+                variant="outlined"
+              >
+                Close
+              </Button>
+            </Box>
           </>
         ) : (
           <>
@@ -122,13 +139,25 @@ const CompanyJobModal = ({ open, onClose, job, fetchJob }) => {
             <Typography variant="body2" className="mb-2">
               <strong>Skills Required:</strong> {job.skillsRequired.join(", ")}
             </Typography>
-            <Button
-              onClick={() => setIsEditing(true)}
-              color="primary"
-              variant="contained"
-            >
-              Edit
-            </Button>
+            <Box display="flex" justifyContent="space-between" mt={2}>
+              <Button
+                onClick={() => setIsEditing(true)}
+                color="primary"
+                variant="contained"
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={() => {
+                  onClose();
+                  setIsEditing(false);
+                }}
+                color="secondary"
+                variant="outlined"
+              >
+                Close
+              </Button>
+            </Box>
           </>
         )}
 

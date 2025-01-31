@@ -30,6 +30,9 @@ const JobCard = ({ job, isCompany = false, fetchJob }) => {
   };
 
   const handleOpen = () => {
+    if (modalOpen) {
+      return;
+    }
     setModalOpen(true);
   };
 
