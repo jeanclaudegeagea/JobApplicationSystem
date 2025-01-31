@@ -11,7 +11,7 @@ class ApplicationController {
       if (!isProfileComplete) {
         return res.status(400).json({
           error:
-            "Your profile is incomplete. Please in your profile details before applying for a job.",
+            "Your profile is incomplete. Please fill in your profile details before applying for a job.",
         });
       }
 
@@ -40,7 +40,12 @@ class ApplicationController {
 
   async getAllApplications(req, res) {
     try {
-      const filter = req.query;
+      const filter = {};
+
+      if (req.query.userId) {
+        filter.user = req.query.userId;
+      }
+
       const applications = await ApplicationService.getAllApplications(filter);
       res.status(200).json(applications);
     } catch (error) {
@@ -73,6 +78,25 @@ class ApplicationController {
         return res.status(404).json({ error: "Application not found" });
       }
       res.status(200).json({ message: "Application deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async checkApplication(req, res) {
+    try {
+      const { jobId } = req.query;
+      const userId = req.userId;
+
+      if (!jobId) {
+        return res.status(400).json({ error: "Job ID is required" });
+      }
+
+      const hasApplied = await ApplicationService.checkApplication(
+        jobId,
+        userId
+      );
+      res.status(200).json({ hasApplied });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

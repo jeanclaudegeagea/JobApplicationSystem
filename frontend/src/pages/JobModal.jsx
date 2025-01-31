@@ -9,6 +9,8 @@ import {
   Chip,
   Link,
   IconButton,
+  CircularProgress,
+  Snackbar,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -18,17 +20,22 @@ import WorkIcon from "@mui/icons-material/Work";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { URL } from "../utils/constants";
-import { terror } from "../utils/toasts";
+import { terror, tsuccess } from "../utils/toasts";
 import { useAuth } from "../utils/AuthContext";
 
 const JobModal = ({ open, onClose, id }) => {
   const formatDate = (date) => new Date(date).toLocaleDateString();
   const [job, setJob] = useState({});
+  const [isApplying, setIsApplying] = useState(false);
+  const [applySuccess, setApplySuccess] = useState(false);
+  const [applyError, setApplyError] = useState(false);
+  const [hasApplied, setHasApplied] = useState(false); // State to track if the user has applied
   const token = JSON.parse(localStorage.getItem("userData"))?.token;
   const { setIsSessionExpiredOpen } = useAuth();
 
   const fetchJob = async () => {
     try {
+      const userId = JSON.parse(localStorage.getItem("userData"))?.id;
       const response = await axios.get(`${URL}/jobs/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -36,6 +43,22 @@ const JobModal = ({ open, onClose, id }) => {
         },
       });
       setJob(response.data);
+
+      // Check if the user has already applied to the job
+      const applicationResponse = await axios.get(`${URL}/applications/check`, {
+        params: {
+          jobId: id,
+          user: userId,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (applicationResponse.data.hasApplied) {
+        setHasApplied(true);
+      }
     } catch (error) {
       console.error("Error fetching job details", error);
 
@@ -45,8 +68,42 @@ const JobModal = ({ open, onClose, id }) => {
     }
   };
 
+  const handleApply = async () => {
+    setIsApplying(true);
+    try {
+      const userId = JSON.parse(localStorage.getItem("userData"))?.id;
+      const response = await axios.post(
+        `${URL}/applications`,
+        {
+          job: id,
+          user: userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        setApplySuccess(true);
+        setHasApplied(true); // Set hasApplied to true after successful application
+        tsuccess("Application submitted successfully!");
+      }
+    } catch (error) {
+      console.error("Error applying to job", error);
+      setApplyError(true);
+      terror(error["response"]["data"]["error"] || "Error applying to job");
+    } finally {
+      setIsApplying(false);
+    }
+  };
+
   useEffect(() => {
-    fetchJob();
+    if (open) {
+      fetchJob();
+    }
   }, [open]);
 
   return (
@@ -68,7 +125,10 @@ const JobModal = ({ open, onClose, id }) => {
       >
         {/* Close Button */}
         <IconButton
-          onClick={onClose}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent event propagation
+            onClose();
+          }}
           sx={{
             position: "absolute",
             top: 10,
@@ -222,7 +282,8 @@ const JobModal = ({ open, onClose, id }) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => alert("Easy apply functionality goes here")}
+            onClick={handleApply}
+            disabled={isApplying || applySuccess || hasApplied} // Disable if already applied
             sx={{
               padding: "10px 20px",
               fontWeight: 600,
@@ -233,9 +294,30 @@ const JobModal = ({ open, onClose, id }) => {
               },
             }}
           >
-            Easy Apply
+            {isApplying ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : applySuccess || hasApplied ? (
+              "Applied"
+            ) : (
+              "Easy Apply"
+            )}
           </Button>
         </Box>
+
+        {/* Snackbar for success/error messages */}
+        <Snackbar
+          open={applySuccess || applyError}
+          autoHideDuration={6000}
+          onClose={() => {
+            setApplySuccess(false);
+            setApplyError(false);
+          }}
+          message={
+            applySuccess
+              ? "Application submitted successfully!"
+              : "Error applying to job"
+          }
+        />
       </Box>
     </Modal>
   );

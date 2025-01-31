@@ -16,7 +16,7 @@ import { formatDistanceToNow } from "date-fns";
 import JobModal from "./JobModal";
 import { useState } from "react";
 import axios from "axios"; // Assuming you use axios for API calls
-import { URL } from "../utils/constants";
+import { BASE_URL, URL } from "../utils/constants";
 
 const JobCard = ({ job, isCompany = false }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -81,7 +81,7 @@ const JobCard = ({ job, isCompany = false }) => {
 
         <Box display="flex" alignItems="center" className="mb-3 gap-4">
           <img
-            src={job.company?.logo}
+            src={`${BASE_URL}${job.company?.logo}`}
             alt={job.company?.name}
             className="w-14 h-14 rounded-full object-cover"
           />

@@ -7,11 +7,21 @@ class ApplicationRepository {
   }
 
   async findById(id) {
-    return await Application.findById(id).populate("user").populate("job");
+    return await Application.findById(id)
+      .populate("user")
+      .populate({
+        path: "job",
+        populate: { path: "company" },
+      });
   }
 
   async findAll(filter = {}) {
-    return await Application.find(filter).populate("user").populate("job");
+    return await Application.find(filter)
+      .populate("user")
+      .populate({
+        path: "job",
+        populate: { path: "company" },
+      });
   }
 
   async updateById(id, updateData) {
@@ -20,6 +30,11 @@ class ApplicationRepository {
 
   async deleteById(id) {
     return await Application.findByIdAndDelete(id);
+  }
+
+  async checkApplication(jobId, userId) {
+    const application = await Application.findOne({ job: jobId, user: userId });
+    return !!application;
   }
 }
 

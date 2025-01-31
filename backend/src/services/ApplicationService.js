@@ -20,6 +20,10 @@ class ApplicationService {
   async deleteApplicationById(id) {
     return await ApplicationRepository.deleteById(id);
   }
+
+  async checkApplication(jobId, userId) {
+    return await ApplicationRepository.checkApplication(jobId, userId);
+  }
 }
 
 module.exports = new ApplicationService();

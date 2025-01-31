@@ -7,6 +7,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 const router = express.Router();
 
 router.post("", authMiddleware, ApplicationController.createApplication);
+router.get("/check", authMiddleware, ApplicationController.checkApplication);
 
 router.get(
   "/:id",
@@ -14,7 +15,6 @@ router.get(
   ApplicationController.getApplicationById
 );
 router.get("", combinedMiddleware, ApplicationController.getAllApplications);
-
 router.put(
   "/:id",
   companyMiddleware,
