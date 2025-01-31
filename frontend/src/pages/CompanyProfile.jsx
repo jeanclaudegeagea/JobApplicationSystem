@@ -206,22 +206,16 @@ const CompanyProfile = () => {
           icon={<DynamicFeedIcon />}
           iconPosition="start"
         />
-        <Tab label="Applications" />
       </Tabs>
       {tabValue === 0 && (
         <Box width="100%">
           <div className="grid grid-cols-3 gap-3 px-10 pt-2">
             {jobs.map((job) => (
               <div key={job._id}>
-                <JobCard job={job} isCompany={true} />
+                <JobCard job={job} isCompany={true} fetchJob={fetchJobs} />
               </div>
             ))}
           </div>
-        </Box>
-      )}
-      {tabValue === 1 && (
-        <Box width="100%">
-          <p>Hi</p>
         </Box>
       )}
     </Box>

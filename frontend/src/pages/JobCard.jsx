@@ -17,8 +17,9 @@ import JobModal from "./JobModal";
 import { useState } from "react";
 import axios from "axios"; // Assuming you use axios for API calls
 import { BASE_URL, URL } from "../utils/constants";
+import CompanyJobModal from "./CompanyJobModal";
 
-const JobCard = ({ job, isCompany = false }) => {
+const JobCard = ({ job, isCompany = false, fetchJob }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [companyModalOpen, setCompanyModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -29,11 +30,7 @@ const JobCard = ({ job, isCompany = false }) => {
   };
 
   const handleOpen = () => {
-    // if (isCompany) {
-    // setCompanyModalOpen(true); // Open CompanyJobModal if isCompany is true
-    // } else {
-    setModalOpen(true); // Open JobModal if isCompany is false
-    // }
+    setModalOpen(true);
   };
 
   const handleDeleteClick = (e) => {
@@ -49,9 +46,9 @@ const JobCard = ({ job, isCompany = false }) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }); // Replace with your delete endpoint
+      });
       setDeleteModalOpen(false);
-      // Optionally, you can trigger a callback or state update to remove the job from the list
+      fetchJob();
     } catch (error) {
       console.error("Error deleting job:", error);
     }
@@ -64,20 +61,11 @@ const JobCard = ({ job, isCompany = false }) => {
   return (
     <Card
       key={job._id}
-      className="bg-white shadow-md p-4 hover:shadow-lg transition-shadow duration-300 h-fit"
+      className="bg-white shadow-md p-4 hover:shadow-lg transition-shadow duration-300 h-fit relative"
       onClick={handleOpen}
     >
       <CardContent>
         {/* Delete Icon */}
-        {/* {isCompany && (
-          <IconButton
-            onClick={handleDeleteClick}
-            className="absolute top-2 right-2"
-            aria-label="delete"
-          >
-            <DeleteIcon />
-          </IconButton>
-        )} */}
 
         <Box display="flex" alignItems="center" className="mb-3 gap-4">
           <img
@@ -85,13 +73,24 @@ const JobCard = ({ job, isCompany = false }) => {
             alt={job.company?.name}
             className="w-14 h-14 rounded-full object-cover"
           />
-          <div className="flex flex-col">
-            <Typography
-              variant="h6"
-              className="font-semibold text-red-900 truncate"
-            >
-              {job.title}
-            </Typography>
+          <div className="flex flex-col w-full">
+            <div className="flex justify-between items-center">
+              <Typography
+                variant="h6"
+                className="font-semibold text-red-900 truncate"
+              >
+                {job.title}
+              </Typography>
+              {isCompany && (
+                <IconButton
+                  onClick={handleDeleteClick}
+                  className="absolute top-2 right-2"
+                  aria-label="delete"
+                >
+                  <DeleteIcon className="text-red-500" />
+                </IconButton>
+              )}
+            </div>
             <Typography variant="body1" className="ml-3 font-semibold truncate">
               {job.company?.name || "Company"}
             </Typography>
@@ -140,7 +139,18 @@ const JobCard = ({ job, isCompany = false }) => {
         </div>
       </CardContent>
 
-      <JobModal open={modalOpen} onClose={handleClose} id={job._id} />
+      {isCompany && (
+        <CompanyJobModal
+          open={modalOpen}
+          onClose={handleClose}
+          job={job}
+          fetchJob={fetchJob}
+        />
+      )}
+
+      {!isCompany && (
+        <JobModal open={modalOpen} onClose={handleClose} id={job._id} />
+      )}
 
       {/* Delete Confirmation Modal */}
       <Modal open={deleteModalOpen} onClose={handleDeleteCancel}>
