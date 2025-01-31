@@ -27,15 +27,15 @@ const AppliedJobsSection = () => {
   const fetchAppliedJobs = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("userData"))?.token;
-      const userId = JSON.parse(localStorage.getItem("userData"))?.id;
+      const userId = JSON.parse(localStorage.getItem("userData"))?.user._id;
 
       // Fetch applied jobs for the current user
       const response = await axios.get(`${URL}/applications`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         params: {
           userId: userId, // Pass the userId as a query parameter
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -184,6 +184,13 @@ const AppliedJobsSection = () => {
                     <Typography variant="body2" color="textSecondary">
                       <strong>Job Type:</strong> {application.job?.jobType}
                     </Typography>
+
+                    {application.companyFeedback && (
+                      <Typography variant="body2" color="textSecondary">
+                        <strong>Company Feedback:</strong>{" "}
+                        {application.companyFeedback}
+                      </Typography>
+                    )}
                   </Box>
                 </Paper>
               </Grid>

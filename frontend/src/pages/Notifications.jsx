@@ -8,6 +8,7 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { format } from "date-fns";
 import { useAuth } from "../utils/AuthContext";
+import { BASE_URL } from "../utils/constants";
 
 const Notifications = () => {
   const { markAsRead, notifications } = useAuth();
@@ -31,7 +32,7 @@ const Notifications = () => {
             notif.isRead ? "bg-gray-100" : "bg-white"
           } max-w-3xl mx-auto`}
         >
-          <Avatar src={notif.userAvatar} alt={notif.user} />
+          <Avatar src={`${BASE_URL}${notif.logo}`} alt={notif.user} />
           <CardContent className="flex-grow">
             <Typography
               variant="body1"

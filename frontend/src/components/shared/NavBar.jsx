@@ -184,7 +184,11 @@ const Navbar = () => {
                   >
                     <Avatar
                       alt={user.name}
-                      src={user.logo}
+                      src={
+                        user.type === "User"
+                          ? `${BASE_URL}${user.profilePicture}`
+                          : `${BASE_URL}${user.logo}`
+                      }
                       sx={{ width: 30, height: 30, marginRight: 2 }}
                     />
                     <span className="text-gray-800 font-semibold hover:text-gray-900 truncate">

@@ -86,6 +86,7 @@ const ExperienceSection = ({
               margin="normal"
               InputLabelProps={{ shrink: true }}
             />
+            <span>If experience is still active keep the end date empty</span>
             <TextField
               label="Description"
               value={job.description}
@@ -120,7 +121,9 @@ const ExperienceSection = ({
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   {new Date(job.startDate).toLocaleDateString()} -{" "}
-                  {new Date(job.endDate).toLocaleDateString()}
+                  {job.endDate
+                    ? new Date(job.endDate).toLocaleDateString()
+                    : "Present"}
                 </Typography>
                 <Typography variant="body2">{job.description}</Typography>
               </Paper>

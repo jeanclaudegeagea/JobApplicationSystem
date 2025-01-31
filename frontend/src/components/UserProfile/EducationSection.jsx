@@ -118,7 +118,9 @@ const EducationSection = ({
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   {new Date(education.startDate).toLocaleDateString()} -{" "}
-                  {new Date(education.endDate).toLocaleDateString()}
+                  {education.endDate
+                    ? new Date(education.endDate).toLocaleDateString()
+                    : "Present"}
                 </Typography>
               </Paper>
             ))

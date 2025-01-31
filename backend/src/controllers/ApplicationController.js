@@ -46,6 +46,10 @@ class ApplicationController {
         filter.user = req.query.userId;
       }
 
+      if (req.query.jobId) {
+        filter.job = req.query.jobId;
+      }
+
       const applications = await ApplicationService.getAllApplications(filter);
       res.status(200).json(applications);
     } catch (error) {
