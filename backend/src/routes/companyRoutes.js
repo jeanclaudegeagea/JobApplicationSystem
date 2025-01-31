@@ -13,6 +13,11 @@ router.get(
   combinedMiddleware,
   CompanyController.getCompany
 );
+router.get(
+  "/company/applying-users/:companyId",
+  companyMiddleware,
+  CompanyController.getApplyingUsers
+);
 router.put("/company", companyMiddleware, CompanyController.updateCompany);
 router.delete("/company", companyMiddleware, CompanyController.deleteCompany);
 

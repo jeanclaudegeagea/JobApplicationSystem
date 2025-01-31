@@ -53,6 +53,10 @@ class CompanyService {
   async deleteCompanyById(id) {
     return await CompanyRepository.deleteById(id);
   }
+
+  async getApplyingUsers(companyId) {
+    return await CompanyRepository.getApplyingUsers(companyId);
+  }
 }
 
 module.exports = new CompanyService();
