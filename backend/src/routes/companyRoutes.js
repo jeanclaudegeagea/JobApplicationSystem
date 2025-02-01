@@ -19,6 +19,10 @@ router.get(
   CompanyController.getApplyingUsers
 );
 router.put("/company", companyMiddleware, CompanyController.updateCompany);
-router.delete("/company", companyMiddleware, CompanyController.deleteCompany);
+router.delete(
+  "/company/:companyId",
+  companyMiddleware,
+  CompanyController.deleteCompany
+);
 
 module.exports = router;

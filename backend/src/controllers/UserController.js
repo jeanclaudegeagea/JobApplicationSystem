@@ -112,7 +112,9 @@ class UserController {
 
   async deleteProfile(req, res) {
     try {
-      await UserService.deleteUserById(req.userId);
+      const { userId } = req.params;
+
+      await UserService.deleteUserById(userId);
       res.status(200).json({
         message: "User deleted successfully",
       });

@@ -79,7 +79,9 @@ class CompanyController {
 
   async deleteCompany(req, res) {
     try {
-      await CompanyService.deleteCompanyById(req.userId);
+      const { companyId } = req.params;
+
+      await CompanyService.deleteCompanyById(companyId);
       res.status(200).json({
         message: "Company deleted successfully",
       });

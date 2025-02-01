@@ -135,7 +135,7 @@ const ProfileHeader = ({
       const localData = JSON.parse(localStorage.getItem("userData"));
       const token = localData.token;
 
-      await axios.delete(`${URL}/users/profile`, {
+      await axios.delete(`${URL}/users/profile/${localData.user._id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
