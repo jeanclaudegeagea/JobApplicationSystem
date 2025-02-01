@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const Connection = require("./Connection");
+const Job = require("./Job");
+const Notification = require("./Notification");
+const Application = require("./Application");
 
 dotenv.config();
 
@@ -24,6 +28,34 @@ companySchema.set("toJSON", {
     ret.password = undefined;
     return ret;
   },
+});
+
+companySchema.pre("findOneAndDelete", async function (next) {
+  const companyId = this.getQuery()._id;
+
+  try {
+    // Find all jobs belonging to this company
+    const jobs = await Job.find({ company: companyId });
+
+    // Extract job IDs
+    const jobIds = jobs.map((job) => job._id);
+
+    // Perform all deletions in parallel for better efficiency
+    await Promise.all([
+      Connection.deleteMany({
+        $or: [{ follower: companyId }, { following: companyId }],
+      }),
+      Job.deleteMany({ company: companyId }),
+      Application.deleteMany({ job: { $in: jobIds } }),
+      Notification.deleteMany({
+        $or: [{ userNotified: companyId }, { fromUser: companyId }],
+      }),
+    ]);
+
+    next(); // Proceed with deletion
+  } catch (error) {
+    next(error); // Pass any error to the next middleware
+  }
 });
 
 module.exports = mongoose.model("Company", companySchema);

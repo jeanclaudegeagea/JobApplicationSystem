@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const Connection = require("./Connection"); // Import the Connection model
+const Notification = require("./Notification");
 
 dotenv.config();
 
@@ -51,6 +53,32 @@ userSchema.set("toJSON", {
     ret.password = undefined;
     return ret;
   },
+});
+
+userSchema.pre("findOneAndDelete", async function (next) {
+  const userId = this.getQuery()._id;
+
+  try {
+    // Delete related connections
+    await Connection.deleteMany({
+      $or: [{ follower: userId }, { following: userId }],
+    });
+
+    // Find the user being deleted
+    const user = await this.model.findOne(this.getFilter());
+    if (user) {
+      // Delete related applications
+      await mongoose.model("Application").deleteMany({ user: user._id });
+    }
+
+    await Notification.deleteMany({
+      $or: [{ userNotified: userId }, { fromUser: userId }],
+    });
+
+    next(); // Proceed with deletion
+  } catch (error) {
+    next(error); // Pass any error to the next middleware
+  }
 });
 
 module.exports = mongoose.model("User", userSchema);

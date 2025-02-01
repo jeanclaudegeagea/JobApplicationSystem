@@ -8,7 +8,7 @@ const notificationSchema = new mongoose.Schema({
   },
   userNotified: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    refPath: "fromUserType", // Dynamic reference
   },
   fromUser: {
     type: mongoose.Schema.Types.ObjectId,

@@ -6,9 +6,6 @@ const Job = require("../models/Job");
 
 class ConnectionRepository {
   async create(follower, followerType, following, followingType) {
-    console.log(follower);
-    console.log(following);
-
     const newConnection = new Connection({
       follower: mongoose.Types.ObjectId.createFromHexString(follower),
       followerType,
