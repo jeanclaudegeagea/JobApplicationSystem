@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Stack, Tabs, Tab } from "@mui/material";
 import { ListAlt, Work } from "@mui/icons-material";
 import axios from "axios";
-import { URL } from "../utils/constants";
+import { BASE_URL, URL } from "../utils/constants";
 import EducationSection from "../components/UserProfile/EducationSection";
 import AppliedJobsSection from "../components/UserProfile/AppliedJobsSection";
 import ExperienceSection from "../components/UserProfile/ExperienceSection";
@@ -42,7 +42,7 @@ const UserProfile = () => {
       const updatedProfile = {
         ...response.data.user,
         profilePicture: response.data.user.profilePicture
-          ? `http://localhost:5000${response.data.user.profilePicture}`
+          ? `${BASE_URL}${response.data.user.profilePicture}`
           : "",
       };
 

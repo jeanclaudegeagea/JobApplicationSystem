@@ -41,9 +41,9 @@ class JobController {
         filter.jobType = { $regex: req.query.jobType, $options: "i" };
       }
 
-      if (req.query.experienceLevel) {
-        filter.experienceLevel = {
-          $regex: req.query.experienceLevel,
+      if (req.query.experienceRequired) {
+        filter.experienceRequired = {
+          $regex: req.query.experienceRequired,
           $options: "i",
         };
       }

@@ -57,7 +57,7 @@ const ApplyJob = () => {
       location: searchParams.location || "",
       jobType: searchParams.jobType || "", // Now just a string, no need to join
       // salaryRange: searchParams.salaryRange.join(","),
-      experienceLevel: searchParams.experienceLevel || "", // Now just a string, no need to join
+      experienceRequired: searchParams.experienceLevel || "", // Now just a string, no need to join
     };
 
     try {
@@ -239,24 +239,6 @@ const ApplyJob = () => {
                 </RadioGroup>
               </FormControl>
             </div>
-
-            {/* Salary Range Filter */}
-            {/* <div className="mt-2">
-              <Typography>Salary Range</Typography>
-              <Slider
-                value={searchParams.salaryRange}
-                onChange={(e, newValue) =>
-                  setSearchParams((prevParams) => ({
-                    ...prevParams,
-                    salaryRange: newValue,
-                  }))
-                }
-                valueLabelDisplay="auto"
-                valueLabelFormat={(value) => `$${value}`}
-                min={0}
-                max={1000000}
-              />
-            </div> */}
 
             {/* Experience Level Filter (Radio Buttons) */}
             <div className="mt-2">
