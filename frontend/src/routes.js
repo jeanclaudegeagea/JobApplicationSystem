@@ -6,12 +6,9 @@ import CreateJob from "./pages/CreateJob";
 import ApplyJob from "./pages/ApplyJob";
 import SearchedUser from "./pages/SearchedUser";
 import SearchedCompany from "./pages/SearchedCompany";
+import LandingPage from "./pages/LandingPage";
 
 export const privateRoutes = [
-  {
-    path: "/",
-    component: Home,
-  },
   {
     path: "/home",
     component: Home,
@@ -43,6 +40,10 @@ export const privateRoutes = [
 ];
 
 export const publicRoutes = [
+  {
+    path: "/",
+    component: LandingPage,
+  },
   {
     path: "/signup",
     component: SignUp,
